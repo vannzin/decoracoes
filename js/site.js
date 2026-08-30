@@ -221,27 +221,75 @@ function renderServices(data) {
 
   container.innerHTML = '';
 
-  const getServiceIcon = (iconName) => {
-    switch (iconName) {
-      case 'sparkles': return '✨';
-      case 'box': return '🎁';
-      case 'palette': return '🎨';
-      case 'cake': return '🎂';
-      default: return '🌸';
+  const getServiceSvgIcon = (iconName, title = '') => {
+    const titleLower = String(title).toLowerCase();
+    const iconLower = String(iconName).toLowerCase();
+
+    // 1. Cenografia & Painéis Temáticos
+    if (iconLower === 'cenografia' || iconLower === 'box' || titleLower.includes('cenografia') || titleLower.includes('pain') || titleLower.includes('temát')) {
+      return `
+        <svg class="service-svg-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 21h18"/>
+          <path d="M5 21V7a7 7 0 0 1 14 0v14"/>
+          <circle cx="12" cy="11" r="2.5"/>
+          <path d="m9 15 6-6"/>
+        </svg>
+      `;
     }
+
+    // 2. Decoração Personalizada (Paleta de Cores)
+    if (iconLower === 'palette' || titleLower.includes('personaliz') || titleLower.includes('paleta')) {
+      return `
+        <svg class="service-svg-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="13.5" cy="6.5" r=".8" fill="currentColor"/>
+          <circle cx="17.5" cy="10.5" r=".8" fill="currentColor"/>
+          <circle cx="8.5" cy="7.5" r=".8" fill="currentColor"/>
+          <circle cx="6.5" cy="12.5" r=".8" fill="currentColor"/>
+          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.5 17.5 2 12 2z"/>
+        </svg>
+      `;
+    }
+
+    // 3. Mesa de Doces & Bolo
+    if (iconLower === 'cake' || titleLower.includes('bolo') || titleLower.includes('doce') || titleLower.includes('mesa')) {
+      return `
+        <svg class="service-svg-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/>
+          <path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/>
+          <path d="M2 21h20"/>
+          <path d="M7 8v3"/>
+          <path d="M12 8v3"/>
+          <path d="M17 8v3"/>
+          <circle cx="7" cy="4" r=".5" fill="currentColor"/>
+          <circle cx="12" cy="4" r=".5" fill="currentColor"/>
+          <circle cx="17" cy="4" r=".5" fill="currentColor"/>
+        </svg>
+      `;
+    }
+
+    // 4. Decoração Completa (Sparkles / Brilhos)
+    return `
+      <svg class="service-svg-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+        <path d="M5 3v4"/>
+        <path d="M3 5h4"/>
+        <path d="M19 17v4"/>
+        <path d="M17 19h4"/>
+      </svg>
+    `;
   };
 
   data.services.forEach(srv => {
     const card = document.createElement('div');
     card.className = 'service-card';
 
-    const iconEmoji = getServiceIcon(srv.icon);
+    const iconSvg = getServiceSvgIcon(srv.icon, srv.title);
     const badgeHtml = srv.badge ? `<span class="service-badge">${window.SecurityUtils.escapeHtml(srv.badge)}</span>` : '';
 
     card.innerHTML = `
       <div>
         <div class="service-header">
-          <div class="service-icon-box">${iconEmoji}</div>
+          <div class="service-icon-box">${iconSvg}</div>
           ${badgeHtml}
         </div>
         <h3 class="service-title">${window.SecurityUtils.escapeHtml(srv.title)}</h3>
