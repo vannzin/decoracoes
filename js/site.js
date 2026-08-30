@@ -727,26 +727,15 @@ function setupScrollAnimations() {
     }
   };
 
-  // Efeito dinâmico no cabeçalho e botão voltar ao topo
-  const updateHeaderAndScrollDirection = () => {
+  // Efeito translúcido suave no cabeçalho e visibilidade do botão voltar ao topo
+  const updateHeaderAndScroll = () => {
     const currentScrollY = window.scrollY;
 
-    // Header com efeito de vidro fosco
-    if (currentScrollY > 20) {
+    // Header com efeito de vidro fosco transparente fixo
+    if (currentScrollY > 15) {
       header?.classList.add('scrolled');
     } else {
       header?.classList.remove('scrolled');
-    }
-
-    // Detecção de direção da rolagem (Descendo vs Subindo)
-    if (currentScrollY > lastScrollY && currentScrollY > 80) {
-      // Descendo
-      header?.classList.add('header-scroll-down');
-      header?.classList.remove('header-scroll-up');
-    } else if (currentScrollY < lastScrollY) {
-      // Subindo
-      header?.classList.add('header-scroll-up');
-      header?.classList.remove('header-scroll-down');
     }
 
     // Botão Voltar ao Topo
@@ -757,6 +746,7 @@ function setupScrollAnimations() {
         backToTopBtn.classList.remove('visible');
       }
     }
+  };
 
     lastScrollY = currentScrollY;
   };
@@ -840,7 +830,7 @@ function setupScrollAnimations() {
 
   const onScrollHandler = () => {
     updateScrollProgress();
-    updateHeaderAndScrollDirection();
+    updateHeaderAndScroll();
     checkVisibilityBidirectional();
   };
 
@@ -849,7 +839,7 @@ function setupScrollAnimations() {
 
   // Executa imediatamente e após renderizações
   updateScrollProgress();
-  updateHeaderAndScrollDirection();
+  updateHeaderAndScroll();
   setTimeout(checkVisibilityBidirectional, 50);
   setTimeout(checkVisibilityBidirectional, 250);
   setTimeout(checkVisibilityBidirectional, 600);

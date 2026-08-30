@@ -214,13 +214,13 @@ button {
   width: calc(100% - 48px);
   max-width: 1320px;
   z-index: 1000;
-  background: rgba(255, 253, 251, 0.75);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
   border-radius: 50px;
-  box-shadow: 0 10px 30px rgba(201, 122, 110, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 25px rgba(201, 122, 110, 0.08);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .site-header .container {
@@ -1900,25 +1900,13 @@ button {
   transform: translateY(0) scale(0.95);
 }
 
-/* Efeito no cabeçalho ao rolar */
-.site-header {
-  transition: background-color 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1), backdrop-filter 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
+/* Efeito translúcido fixo no cabeçalho ao rolar */
 .site-header.scrolled {
-  background: rgba(255, 255, 255, 0.96) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 6px 28px rgba(201, 122, 110, 0.14);
-}
-
-.site-header.header-scroll-down {
-  transform: translateY(-2px);
-}
-
-.site-header.header-scroll-up {
-  transform: translateY(0);
-  box-shadow: 0 8px 30px rgba(201, 122, 110, 0.18);
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 30px rgba(201, 122, 110, 0.12);
 }
 
 /* ========================================================================== 
