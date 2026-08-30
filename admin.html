@@ -98,6 +98,10 @@
           <span class="icon">💾</span>
           <span>Backup & Restauração</span>
         </a>
+        <a class="sidebar-link" data-tab="tab-seguranca">
+          <span class="icon">🔒</span>
+          <span>Segurança & Acesso</span>
+        </a>
       </nav>
 
       <div class="sidebar-footer">
@@ -423,6 +427,88 @@
             <button class="admin-btn admin-btn-danger" id="btn-reset-defaults">
               <span>🔄 Restaurar Dados Padrão</span>
             </button>
+          </div>
+
+        </section>
+
+        <!-- ==================== TAB 8: SEGURANÇA E ACESSO ==================== -->
+        <section class="admin-tab-pane" id="tab-seguranca">
+          
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title">Alterar Usuário e Senha de Acesso</h3>
+                <p style="color: var(--admin-muted); font-size: 0.85rem; margin-top: 4px;">Personalize suas credenciais para proteger o painel administrativo.</p>
+              </div>
+              <span id="badge-auth-status" style="font-size: 0.8rem; font-weight: 700; background: var(--rose-100); color: var(--admin-primary); padding: 4px 12px; border-radius: 12px;">
+                🔒 Credencial Padrão
+              </span>
+            </div>
+
+            <form id="form-change-auth">
+              
+              <!-- Etapa 1: Confirmação da Senha Atual -->
+              <div style="background: #FAF5F3; border: 1.5px solid var(--admin-border); padding: 18px; border-radius: 12px; margin-bottom: 22px;">
+                <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 14px; color: var(--admin-text); display: flex; align-items: center; gap: 8px;">
+                  <span>🔑</span> 1. Confirmação do Acesso Atual
+                </h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="inp-current-user">Usuário Atual</label>
+                    <input type="text" class="form-control" id="inp-current-user" placeholder="Digite seu usuário atual" required autocomplete="username">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="inp-current-pass">Senha Atual</label>
+                    <div style="position: relative;">
+                      <input type="password" class="form-control" id="inp-current-pass" placeholder="Digite sua senha atual" required autocomplete="current-password" style="padding-right: 40px;">
+                      <button type="button" class="btn-toggle-pwd" data-target="inp-current-pass" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 1rem; color: var(--admin-muted); background: none; border: none; cursor: pointer;" title="Mostrar/Ocultar Senha">👁️</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Etapa 2: Novas Credenciais -->
+              <div style="background: #FFFFFF; border: 1.5px solid var(--admin-primary); padding: 20px; border-radius: 12px; margin-bottom: 22px; box-shadow: 0 4px 14px rgba(201, 122, 110, 0.08);">
+                <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 14px; color: var(--admin-primary); display: flex; align-items: center; gap: 8px;">
+                  <span>✨</span> 2. Definir Novo Usuário e Nova Senha
+                </h4>
+
+                <div class="form-group">
+                  <label class="form-label" for="inp-new-user">Novo Nome de Usuário</label>
+                  <input type="text" class="form-control" id="inp-new-user" placeholder="Ex: mary, admin, diretoria" required minlength="3" autocomplete="username">
+                  <div class="form-help">Mínimo de 3 caracteres (sem espaços).</div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="inp-new-pass">Nova Senha</label>
+                    <div style="position: relative;">
+                      <input type="password" class="form-control" id="inp-new-pass" placeholder="Mínimo 4 caracteres" required minlength="4" autocomplete="new-password" style="padding-right: 40px;">
+                      <button type="button" class="btn-toggle-pwd" data-target="inp-new-pass" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 1rem; color: var(--admin-muted); background: none; border: none; cursor: pointer;" title="Mostrar/Ocultar Senha">👁️</button>
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="inp-new-pass-confirm">Confirmar Nova Senha</label>
+                    <div style="position: relative;">
+                      <input type="password" class="form-control" id="inp-new-pass-confirm" placeholder="Repita a nova senha" required minlength="4" autocomplete="new-password" style="padding-right: 40px;">
+                      <button type="button" class="btn-toggle-pwd" data-target="inp-new-pass-confirm" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 1rem; color: var(--admin-muted); background: none; border: none; cursor: pointer;" title="Mostrar/Ocultar Senha">👁️</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <button type="button" class="admin-btn admin-btn-outline" id="btn-reset-auth-defaults">
+                  <span>🔄 Restaurar Login Padrão (admin / mary123)</span>
+                </button>
+                
+                <button type="submit" class="admin-btn admin-btn-primary">
+                  <span>💾 Salvar Novas Credenciais</span>
+                </button>
+              </div>
+
+            </form>
           </div>
 
         </section>

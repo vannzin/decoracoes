@@ -3,12 +3,72 @@
  * Gerenciamento de login demonstrativo, CRUDs dinâmicos, modais, toasts e backups.
  */
 
-// Credenciais Demonstrativas (Apenas para prototipagem local)
-const DEMO_AUTH = {
-  user: 'admin',
-  pass: 'mary123',
-  sessionKey: 'decoracoes_mary_auth_session'
+// Chaves de Sessão e Credenciais de Acesso
+const AUTH_CONFIG = {
+  sessionKey: 'decoracoes_mary_auth_session',
+  credentialsKey: 'decoracoes_mary_auth_credentials',
+  defaultUser: 'admin',
+  defaultPass: 'mary123'
 };
+
+// Retorna as credenciais ativas salvas ou as padrões
+function getAdminAuth() {
+  try {
+    const saved = localStorage.getItem(AUTH_CONFIG.credentialsKey);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed.user && parsed.pass) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.warn('Erro ao ler credenciais de auth:', e);
+  }
+  return {
+    user: AUTH_CONFIG.defaultUser,
+    pass: AUTH_CONFIG.defaultPass,
+    isDefault: true
+  };
+}
+
+// Salva novas credenciais
+function saveAdminAuth(user, pass) {
+  const isDefault = (user === AUTH_CONFIG.defaultUser && pass === AUTH_CONFIG.defaultPass);
+  const data = {
+    user: user.trim(),
+    pass: pass.trim(),
+    isDefault,
+    updatedAt: new Date().toISOString()
+  };
+  localStorage.setItem(AUTH_CONFIG.credentialsKey, JSON.stringify(data));
+  updateAuthStatusBadge();
+  return true;
+}
+
+// Restaura credenciais padrão
+function resetAdminAuthToDefault() {
+  localStorage.removeItem(AUTH_CONFIG.credentialsKey);
+  updateAuthStatusBadge();
+  return { user: AUTH_CONFIG.defaultUser, pass: AUTH_CONFIG.defaultPass, isDefault: true };
+}
+
+function updateAuthStatusBadge() {
+  const badge = document.getElementById('badge-auth-status');
+  if (!badge) return;
+  const current = getAdminAuth();
+  if (current.isDefault) {
+    badge.textContent = '🔒 Credencial Padrão';
+    badge.style.background = 'var(--rose-100)';
+    badge.style.color = 'var(--admin-primary)';
+  } else {
+    badge.textContent = '🛡️ Credencial Personalizada';
+    badge.style.background = '#DCFCE7';
+    badge.style.color = '#15803D';
+  }
+}
+window.getAdminAuth = getAdminAuth;
+window.saveAdminAuth = saveAdminAuth;
+window.resetAdminAuthToDefault = resetAdminAuthToDefault;
 
 let currentPendingConfirmAction = null;
 
@@ -62,11 +122,12 @@ document.addEventListener('DOMContentLoaded', () => {
   setupForms();
   setupImagePreviews();
   setupBackupHandlers();
+  setupAuthChangeForm();
   setupMobileSidebar();
 });
 
 /**
- * 1. Sistema de Autenticação Demonstrativa
+ * 1. Sistema de Autenticação e Login
  */
 function initAuth() {
   const loginScreen = document.getElementById('login-screen');
@@ -74,12 +135,13 @@ function initAuth() {
   const loginForm = document.getElementById('login-form');
   const btnLogout = document.getElementById('btn-logout');
 
-  const isAuthenticated = sessionStorage.getItem(DEMO_AUTH.sessionKey) === 'true';
+  const isAuthenticated = sessionStorage.getItem(AUTH_CONFIG.sessionKey) === 'true';
 
   if (isAuthenticated) {
     loginScreen.style.display = 'none';
     adminLayout.classList.add('active');
     loadAdminData();
+    updateAuthStatusBadge();
   } else {
     loginScreen.style.display = 'flex';
     adminLayout.classList.remove('active');
@@ -91,15 +153,17 @@ function initAuth() {
       e.preventDefault();
       const user = document.getElementById('login-username').value.trim();
       const pass = document.getElementById('login-password').value.trim();
+      const currentAuth = getAdminAuth();
 
-      if (user === DEMO_AUTH.user && pass === DEMO_AUTH.pass) {
-        sessionStorage.setItem(DEMO_AUTH.sessionKey, 'true');
-        showToast('Login realizado com sucesso! Bem-vinda(o), Mary.', 'success');
+      if (user === currentAuth.user && pass === currentAuth.pass) {
+        sessionStorage.setItem(AUTH_CONFIG.sessionKey, 'true');
+        showToast(`Login realizado com sucesso! Bem-vinda(o), ${user}.`, 'success');
         loginScreen.style.display = 'none';
         adminLayout.classList.add('active');
         loadAdminData();
+        updateAuthStatusBadge();
       } else {
-        showToast('Usuário ou senha incorretos. Use admin / mary123.', 'error');
+        showToast('Usuário ou senha incorretos. Verifique suas credenciais.', 'error');
       }
     };
   }
@@ -107,10 +171,91 @@ function initAuth() {
   // Logout
   if (btnLogout) {
     btnLogout.onclick = () => {
-      sessionStorage.removeItem(DEMO_AUTH.sessionKey);
+      sessionStorage.removeItem(AUTH_CONFIG.sessionKey);
       showToast('Sessão encerrada com segurança.', 'info');
       adminLayout.classList.remove('active');
       loginScreen.style.display = 'flex';
+    };
+  }
+}
+
+/**
+ * 1.1. Formulário de Troca de Credenciais de Acesso (Usuário e Senha)
+ */
+function setupAuthChangeForm() {
+  const formChangeAuth = document.getElementById('form-change-auth');
+  const btnResetAuth = document.getElementById('btn-reset-auth-defaults');
+
+  // Alternadores de visibilidade de senha (👁️)
+  document.querySelectorAll('.btn-toggle-pwd').forEach(btn => {
+    btn.onclick = (e) => {
+      e.preventDefault();
+      const targetId = btn.dataset.target;
+      const targetInput = document.getElementById(targetId);
+      if (targetInput) {
+        const isPassword = targetInput.type === 'password';
+        targetInput.type = isPassword ? 'text' : 'password';
+        btn.textContent = isPassword ? '🙈' : '👁️';
+      }
+    };
+  });
+
+  // Salvar novo usuário e senha
+  if (formChangeAuth) {
+    formChangeAuth.onsubmit = (e) => {
+      e.preventDefault();
+      const currentUser = document.getElementById('inp-current-user').value.trim();
+      const currentPass = document.getElementById('inp-current-pass').value.trim();
+      const newUser = document.getElementById('inp-new-user').value.trim();
+      const newPass = document.getElementById('inp-new-pass').value.trim();
+      const newPassConfirm = document.getElementById('inp-new-pass-confirm').value.trim();
+
+      const activeAuth = getAdminAuth();
+
+      // 1. Valida credenciais atuais
+      if (currentUser !== activeAuth.user || currentPass !== activeAuth.pass) {
+        showToast('Usuário atual ou senha atual incorretos.', 'error');
+        return;
+      }
+
+      // 2. Valida novo usuário
+      if (newUser.length < 3) {
+        showToast('O novo usuário deve ter pelo menos 3 caracteres.', 'warning');
+        return;
+      }
+
+      // 3. Valida nova senha
+      if (newPass.length < 4) {
+        showToast('A nova senha deve ter pelo menos 4 caracteres.', 'warning');
+        return;
+      }
+
+      // 4. Valida confirmação de senha
+      if (newPass !== newPassConfirm) {
+        showToast('A confirmação de senha não coincide com a nova senha.', 'warning');
+        return;
+      }
+
+      // 5. Salva novas credenciais
+      saveAdminAuth(newUser, newPass);
+      showToast(`Credenciais atualizadas com sucesso! Novo usuário: "${newUser}".`, 'success', 4500);
+
+      // Limpa os campos
+      document.getElementById('inp-current-user').value = '';
+      document.getElementById('inp-current-pass').value = '';
+      document.getElementById('inp-new-user').value = '';
+      document.getElementById('inp-new-pass').value = '';
+      document.getElementById('inp-new-pass-confirm').value = '';
+    };
+  }
+
+  // Restaurar padrões
+  if (btnResetAuth) {
+    btnResetAuth.onclick = () => {
+      confirmAction('Deseja realmente restaurar o usuário e a senha para o padrão original (admin / mary123)?', () => {
+        resetAdminAuthToDefault();
+        showToast('Credenciais restauradas para o padrão: admin / mary123.', 'info', 4000);
+      });
     };
   }
 }
