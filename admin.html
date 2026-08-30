@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Painel Administrativo | Decorações by Mary</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+
+  <!-- Google Fonts - Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- Folha de Estilos do Painel -->
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <!-- ==================== TELA DE LOGIN (DEMO) ==================== -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-card">
+      <img src="assets/logo-mary.jpg" alt="Decorações by Mary Logo" class="admin-login-logo" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 2px solid var(--admin-gold); margin-bottom: 16px; box-shadow: var(--shadow-md);">
+      <h1 class="login-title">Painel de Gestão</h1>
+      <p class="login-subtitle">Decorações by Mary</p>
+
+      <!-- Badge Explicativo de Segurança -->
+      <div class="demo-credentials-badge">
+        <strong>🔒 Demonstração / Local:</strong><br>
+        Usuário: <code>admin</code> | Senha: <code>mary123</code><br>
+        <small style="opacity: 0.85;">*Esta autenticação é simulada via JS/LocalStorage para prototipagem local. Para produção, integre com Supabase Auth.</small>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-username">Usuário</label>
+          <input type="text" class="form-control" id="login-username" placeholder="Digite admin" required autofocus autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Senha</label>
+          <input type="password" class="form-control" id="login-password" placeholder="Digite mary123" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="admin-btn admin-btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: 8px;">
+          <span>Entrar no Painel</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== LAYOUT PRINCIPAL DO PAINEL ==================== -->
+  <div class="admin-layout" id="admin-layout">
+    
+    <!-- Sidebar / Menu Lateral -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div class="sidebar-header">
+        <img src="assets/logo-mary.jpg" alt="Decorações by Mary Logo" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--admin-gold);">
+        <div class="sidebar-logo-text">
+          <h3>Mary Painel</h3>
+          <p>Decorações by Mary</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <span class="nav-category-label">Geral</span>
+        <a class="sidebar-link active" data-tab="tab-empresa">
+          <span class="icon">🏢</span>
+          <span>Dados da Empresa</span>
+        </a>
+
+        <span class="nav-category-label">Conteúdo do Site</span>
+        <a class="sidebar-link" data-tab="tab-hero">
+          <span class="icon">✨</span>
+          <span>Página Inicial (Hero)</span>
+        </a>
+        <a class="sidebar-link" data-tab="tab-categorias">
+          <span class="icon">🏷️</span>
+          <span>Categorias</span>
+        </a>
+        <a class="sidebar-link" data-tab="tab-servicos">
+          <span class="icon">🎁</span>
+          <span>Serviços Oferecidos</span>
+        </a>
+        <a class="sidebar-link" data-tab="tab-portfolio">
+          <span class="icon">🖼️</span>
+          <span>Galeria de Portfólio</span>
+        </a>
+        <a class="sidebar-link" data-tab="tab-sobre">
+          <span class="icon">📖</span>
+          <span>Sobre a Empresa</span>
+        </a>
+
+        <span class="nav-category-label">Sistema</span>
+        <a class="sidebar-link" data-tab="tab-backup">
+          <span class="icon">💾</span>
+          <span>Backup & Restauração</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="admin-btn admin-btn-sm admin-btn-danger" title="Encerrar Sessão" style="width: 100%; justify-content: center;">
+          <span>🚪 Sair do Painel</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Área Principal / Main Area -->
+    <div class="admin-main">
+      
+      <!-- Barra Superior / Topbar -->
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <button class="mobile-sidebar-toggle" id="mobile-sidebar-toggle" aria-label="Abrir Menu Lateral">☰</button>
+          <h2 class="topbar-page-title" id="topbar-title">Dados da Empresa</h2>
+        </div>
+
+        <div class="topbar-right">
+          <div class="status-live-pill" title="Alterações sincronizam com o site público em tempo real">
+            <span class="status-dot"></span>
+            <span>LocalStorage Sincronizado</span>
+          </div>
+
+          <a href="index.html" target="_blank" class="admin-btn admin-btn-sm admin-btn-primary">
+            <span>🌐 Ver Site Público</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- Conteúdo das Abas / Tabs -->
+      <main class="admin-content">
+        
+        <!-- ==================== TAB: DADOS DA EMPRESA ==================== -->
+        <section class="admin-tab-pane active" id="tab-empresa">
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <h3 class="card-title">Informações Institucionais & Contatos</h3>
+            </div>
+            
+            <form id="form-company">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                
+                <div class="form-group">
+                  <label class="form-label" for="inp-company-name">Nome da Empresa</label>
+                  <input type="text" class="form-control" id="inp-company-name" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="inp-company-slogan">Slogan da Empresa</label>
+                  <input type="text" class="form-control" id="inp-company-slogan" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="inp-company-whatsapp">Número do WhatsApp (com DDD)</label>
+                  <input type="text" class="form-control" id="inp-company-whatsapp" placeholder="Ex: 5511999998888 ou (11) 99999-8888" required>
+                  <div class="form-help">Utilizado para gerar o link direto wa.me/numero</div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="inp-company-whatsapp-formatted">Telefone Exibido (Formatado)</label>
+                  <input type="text" class="form-control" id="inp-company-whatsapp-formatted" placeholder="(11) 99999-8888">
+                  <div class="form-help">Texto exibido visualmente no rodapé do site</div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="inp-company-instagram">URL Completa do Instagram</label>
+                  <input type="url" class="form-control" id="inp-company-instagram" placeholder="https://www.instagram.com/decoracoesbymary/" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="inp-company-instagram-handle">Nome de Usuário (@)</label>
+                  <input type="text" class="form-control" id="inp-company-instagram-handle" placeholder="@decoracoesbymary">
+                </div>
+
+                <div class="form-group" style="grid-column: 1/-1;">
+                  <label class="form-label" for="inp-company-location">Região de Atendimento</label>
+                  <input type="text" class="form-control" id="inp-company-location" placeholder="MG - CONTAGEM">
+                </div>
+
+                <div class="form-group" style="grid-column: 1/-1;">
+                  <label class="form-label" for="inp-company-whatsapp-msg">Mensagem Padrão do WhatsApp</label>
+                  <textarea class="form-control" id="inp-company-whatsapp-msg" rows="3"></textarea>
+                  <div class="form-help">Mensagem que será pré-preenchida quando o cliente clicar no botão do WhatsApp</div>
+                </div>
+
+              </div>
+
+              <div style="text-align: right; margin-top: 16px;">
+                <button type="submit" class="admin-btn admin-btn-primary">
+                  <span>💾 Salvar Informações da Empresa</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 3: HERO (PÁGINA INICIAL) ==================== -->
+        <section class="admin-tab-pane" id="tab-hero">
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <h3 class="card-title">Seção Principal (Hero Banner)</h3>
+            </div>
+
+            <form id="form-hero">
+              <div class="form-group">
+                <label class="form-label" for="inp-hero-title">Título Principal de Destaque</label>
+                <input type="text" class="form-control" id="inp-hero-title" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="inp-hero-subtitle">Texto / Subtítulo Explicativo</label>
+                <textarea class="form-control" id="inp-hero-subtitle" rows="3" required></textarea>
+              </div>
+
+              <div style="text-align: right; margin-top: 16px;">
+                <button type="submit" class="admin-btn admin-btn-primary">
+                  <span>💾 Salvar Textos da Página Inicial</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- ==================== TAB: CATEGORIAS (CRUD) ==================== -->
+        <section class="admin-tab-pane" id="tab-categorias">
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title">Categorias de Destaque</h3>
+                <p style="font-size: 0.88rem; color: var(--admin-muted);">Gerencie as categorias de eventos, os Stories animados e os filtros do portfólio.</p>
+              </div>
+              <button class="admin-btn admin-btn-primary" id="btn-add-category">
+                <span>➕ Nova Categoria</span>
+              </button>
+            </div>
+
+            <div class="items-grid" id="admin-categories-grid">
+              <!-- Renderizado dinamicamente -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 4: SERVIÇOS (CRUD) ==================== -->
+        <section class="admin-tab-pane" id="tab-servicos">
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title">Serviços Oferecidos</h3>
+                <p style="font-size: 0.88rem; color: var(--admin-muted);">Gerencie os pacotes e modalidades de decoração exibidos no site.</p>
+              </div>
+              <button class="admin-btn admin-btn-primary" id="btn-add-service">
+                <span>➕ Novo Serviço</span>
+              </button>
+            </div>
+
+            <div class="items-grid" id="admin-services-grid">
+              <!-- Renderizado dinamicamente -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 5: PORTFÓLIO (CRUD) ==================== -->
+        <section class="admin-tab-pane" id="tab-portfolio">
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title">Galeria de Trabalhos Realizados</h3>
+                <p style="font-size: 0.88rem; color: var(--admin-muted);">Adicione fotos, escolha a categoria e encante seus clientes.</p>
+              </div>
+              <button class="admin-btn admin-btn-primary" id="btn-add-portfolio">
+                <span>➕ Adicionar Trabalho</span>
+              </button>
+            </div>
+
+            <div class="items-grid" id="admin-portfolio-grid">
+              <!-- Renderizado dinamicamente -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 6: SOBRE A EMPRESA ==================== -->
+        <section class="admin-tab-pane" id="tab-sobre">
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <h3 class="card-title">Seção Quem Somos / Sobre</h3>
+            </div>
+
+            <form id="form-about">
+              <div class="form-group">
+                <label class="form-label" for="inp-about-title">Título da Seção</label>
+                <input type="text" class="form-control" id="inp-about-title" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="inp-about-subtitle">Frase de Efeito / Subtítulo</label>
+                <input type="text" class="form-control" id="inp-about-subtitle" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="inp-about-text">Texto Completo da História da Mary</label>
+                <textarea class="form-control" id="inp-about-text" rows="5" required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="inp-about-quote">Frase de Inspiração / Citação (Quote)</label>
+                <input type="text" class="form-control" id="inp-about-quote" value="“A festa começa antes do parabéns: começa quando cada detalhe faz a pessoa sorrir.”">
+                <div class="form-help">Exibida em destaque elegante com aspas logo abaixo da história no site.</div>
+              </div>
+
+              <!-- Foto / Logo da Empresa -->
+              <div class="form-group" style="background: #FFFFFF; border: 1.5px solid var(--admin-border); padding: 22px; border-radius: var(--radius); margin-top: 15px;">
+                <label class="form-label" style="font-size: 1rem; margin-bottom: 14px; display: block; color: var(--admin-text);">🖼️ Imagem / Foto da Seção Sobre</label>
+                
+                <div style="display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap;">
+                  
+                  <!-- Prévia Atual -->
+                  <div style="text-align: center;">
+                    <div style="width: 120px; height: 120px; border-radius: 16px; overflow: hidden; border: 2px solid var(--admin-primary); background: #FAF5F3; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                      <img src="assets/logo-mary.jpg" alt="Foto da Empresa" id="about-img-preview" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
+                    </div>
+                    <span style="font-size: 0.75rem; color: var(--admin-muted); font-weight: 600;">Prévia Atual</span>
+                  </div>
+
+                  <!-- Métodos de Seleção -->
+                  <div style="flex: 1; min-width: 260px; display: flex; flex-direction: column; gap: 14px;">
+                    
+                    <!-- Opção A: Arrastar ou Selecionar Arquivo -->
+                    <div>
+                      <input type="file" id="inp-about-img-file" accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml, .png, .jpg, .jpeg, .webp, .svg" style="display: none;">
+                      <label for="inp-about-img-file" id="about-dropzone" style="display: block; border: 2px dashed var(--admin-primary); border-radius: 12px; padding: 16px; text-align: center; background: var(--rose-50); cursor: pointer; transition: var(--transition);">
+                        <div style="font-size: 1.4rem; margin-bottom: 4px;">📁</div>
+                        <strong style="color: var(--admin-primary); font-size: 0.92rem;">Clique aqui para escolher arquivo ou arraste a foto</strong>
+                        <p style="font-size: 0.78rem; color: var(--admin-muted); margin-top: 4px;">Suporta <strong>PNG (com transparência)</strong>, JPG, WEBP e SVG</p>
+                      </label>
+                    </div>
+
+                    <!-- Opção B: Digitar Caminho do Arquivo ou Link Web -->
+                    <div>
+                      <label class="form-label" for="inp-about-img" style="font-size: 0.82rem; font-weight: 600; margin-bottom: 4px;">Ou informe o caminho do arquivo / link:</label>
+                      <input type="text" class="form-control" id="inp-about-img" value="assets/2.png" placeholder="Ex: assets/2.png, assets/1.png ou https://...">
+                      <span style="font-size: 0.75rem; color: var(--admin-muted);">Fotos disponíveis no seu projeto: <code>assets/2.png</code>, <code>assets/1.png</code>, <code>assets/logo-mary.jpg</code></span>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <div style="text-align: right; margin-top: 20px;">
+                <button type="submit" class="admin-btn admin-btn-primary">
+                  <span>💾 Salvar Seção Sobre</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 7: BACKUP & RESTAURAÇÃO ==================== -->
+        <section class="admin-tab-pane" id="tab-backup">
+          
+          <!-- Monitoramento de Armazenamento em Tempo Real -->
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title">Armazenamento Expandido (IndexedDB + LocalStorage)</h3>
+                <p style="color: var(--admin-muted); font-size: 0.85rem; margin-top: 4px;">Sistema com banco de alta capacidade para suportar mais fotos e projetos.</p>
+              </div>
+              <span id="storage-usage-pill" style="font-size: 0.8rem; font-weight: 700; background: var(--rose-100); color: var(--admin-primary); padding: 4px 12px; border-radius: 12px;">
+                0.1% Usado
+              </span>
+            </div>
+
+            <div style="margin: 15px 0 10px;">
+              <div style="width: 100%; height: 14px; background: var(--admin-border); border-radius: 10px; overflow: hidden;">
+                <div id="storage-progress-bar" style="width: 1%; height: 100%; background: var(--rose-gold-gradient); border-radius: 10px; transition: width 0.5s ease;"></div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--admin-muted); flex-wrap: wrap; gap: 8px;">
+              <span id="storage-used-text">Usado: ~17 KB</span>
+              <span id="storage-free-text">Livre: ~19.98 MB (20.463 KB)</span>
+              <span style="font-weight: 600; color: var(--admin-primary);">Capacidade Expandida: 20,00 MB (20.480 KB)</span>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <h3 class="card-title">Exportar Backup Completo</h3>
+            </div>
+            <p style="color: var(--admin-muted); margin-bottom: 20px; font-size: 0.95rem;">
+              Faça o download de todos os seus serviços, fotos do portfólio, textos e configurações em um único arquivo <code>.json</code>.
+            </p>
+            <button class="admin-btn admin-btn-primary" id="btn-export-backup">
+              <span>📥 Baixar Arquivo de Backup (.json)</span>
+            </button>
+          </div>
+
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <h3 class="card-title">Restaurar / Importar Backup</h3>
+            </div>
+            <p style="color: var(--admin-muted); margin-bottom: 20px; font-size: 0.95rem;">
+              Selecione um arquivo de backup previamente exportado para restaurar os dados do sistema. O arquivo será rigorosamente validado antes de ser aplicado.
+            </p>
+            
+            <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+              <input type="file" id="inp-import-file" accept=".json" style="display: none;">
+              <button class="admin-btn admin-btn-secondary" onclick="document.getElementById('inp-import-file').click()">
+                <span>📁 Escolher Arquivo JSON</span>
+              </button>
+              <span id="import-file-name" style="font-size: 0.88rem; color: var(--admin-muted);">Nenhum arquivo selecionado</span>
+            </div>
+          </div>
+
+          <div class="admin-card" style="border: 1.5px solid #FCA5A5; background: #FEF2F2;">
+            <div class="card-header-flex" style="border-bottom-color: #FCA5A5;">
+              <h3 class="card-title" style="color: var(--color-danger);">⚠️ Restaurar Dados Padrão de Fábrica</h3>
+            </div>
+            <p style="color: #7F1D1D; margin-bottom: 20px; font-size: 0.92rem;">
+              Atenção: Esta ação substituirá todos os dados personalizados atuais pelos dados padrão de fábrica do projeto (com as fotos e serviços originais).
+            </p>
+            <button class="admin-btn admin-btn-danger" id="btn-reset-defaults">
+              <span>🔄 Restaurar Dados Padrão</span>
+            </button>
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DE CATEGORIA (ADD/EDIT) ==================== -->
+  <div class="admin-modal" id="modal-category" role="dialog" aria-modal="true">
+    <div class="admin-modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-category-title">Cadastrar Nova Categoria</h3>
+        <button class="modal-close-btn" onclick="closeAdminModal('modal-category')">✕</button>
+      </div>
+      <form id="form-modal-category">
+        <div class="modal-body">
+          <input type="hidden" id="category-edit-id">
+
+          <div class="form-group">
+            <label class="form-label" for="category-name">Nome da Categoria</label>
+            <input type="text" class="form-control" id="category-name" placeholder="Ex: Chá de Bebê, 15 Anos..." required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="category-icon">Ícone / Emoji do Story</label>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <input type="text" class="form-control" id="category-icon" placeholder="🧸" style="width: 80px; text-align: center; font-size: 1.5rem;" required>
+              
+              <div class="quick-emoji-buttons" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <button type="button" class="admin-btn admin-btn-sm admin-btn-outline btn-quick-emoji" data-emoji="🧸">🧸</button>
+                <button type="button" class="admin-btn admin-btn-sm admin-btn-outline btn-quick-emoji" data-emoji="🥂">🥂</button>
+                <button type="button" class="admin-btn admin-btn-sm admin-btn-outline btn-quick-emoji" data-emoji="💍">💍</button>
+                <button type="button" class="admin-btn admin-btn-sm admin-btn-outline btn-quick-emoji" data-emoji="🍼">🍼</button>
+                <button type="button" class="admin-btn admin-btn-sm admin-btn-outline btn-quick-emoji" data-emoji="🕊️">🕊️</button>
+                <button type="button" class="admin-btn admin-btn-sm admin-btn-outline btn-quick-emoji" data-emoji="🎓">🎓</button>
+                <button type="button" class="admin-btn admin-btn-sm admin-btn-outline btn-quick-emoji" data-emoji="🎂">🎂</button>
+                <button type="button" class="admin-btn admin-btn-sm admin-btn-outline btn-quick-emoji" data-emoji="👑">👑</button>
+                <button type="button" class="admin-btn admin-btn-sm admin-btn-outline btn-quick-emoji" data-emoji="🎈">🎈</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="category-slug">Identificador Único (Código / Slug)</label>
+            <input type="text" class="form-control" id="category-slug" placeholder="Ex: aniversario-infantil, cha-de-bebe" required>
+            <div class="form-help">Usado para associar os trabalhos do portfólio a esta categoria.</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="admin-btn admin-btn-outline" onclick="closeAdminModal('modal-category')">Cancelar</button>
+          <button type="submit" class="admin-btn admin-btn-primary">Salvar Categoria</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DE SERVIÇO (ADD/EDIT) ==================== -->
+  <div class="admin-modal" id="modal-service" role="dialog" aria-modal="true">
+    <div class="admin-modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-service-title">Cadastrar Novo Serviço</h3>
+        <button class="modal-close-btn" onclick="closeAdminModal('modal-service')">✕</button>
+      </div>
+      <form id="form-modal-service">
+        <div class="modal-body">
+          <input type="hidden" id="service-edit-id">
+
+          <div class="form-group">
+            <label class="form-label" for="service-title">Nome do Serviço</label>
+            <input type="text" class="form-control" id="service-title" placeholder="Ex: Decoração Completa" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="service-badge">Selo / Destaque (Opcional)</label>
+            <input type="text" class="form-control" id="service-badge" placeholder="Ex: Mais Escolhido, Exclusivo">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="service-icon">Ícone / Estilo Visual</label>
+            <select class="form-control" id="service-icon">
+              <option value="sparkles">✨ Brilho / Decoração Completa</option>
+              <option value="palette">🎨 Paleta / Projeto Personalizado</option>
+              <option value="cake">🎂 Bolo / Mesa de Doces</option>
+              <option value="box">🎁 Cenografia / Painéis & Detalhes</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="service-description">Descrição Completa</label>
+            <textarea class="form-control" id="service-description" rows="4" placeholder="Descreva o que está incluso no pacote..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="admin-btn admin-btn-outline" onclick="closeAdminModal('modal-service')">Cancelar</button>
+          <button type="submit" class="admin-btn admin-btn-primary">Salvar Serviço</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DE PORTFÓLIO (ADD/EDIT) ==================== -->
+  <div class="admin-modal" id="modal-portfolio" role="dialog" aria-modal="true">
+    <div class="admin-modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-portfolio-title">Adicionar Trabalho ao Portfólio</h3>
+        <button class="modal-close-btn" onclick="closeAdminModal('modal-portfolio')">✕</button>
+      </div>
+      <form id="form-modal-portfolio">
+        <div class="modal-body">
+          <input type="hidden" id="portfolio-edit-id">
+
+          <div class="form-group">
+            <label class="form-label" for="portfolio-title">Título do Evento / Decoração</label>
+            <input type="text" class="form-control" id="portfolio-title" placeholder="Ex: Casamento Rosé Gold & Velas" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tipo de Trabalho / Categoria</label>
+            <input type="hidden" id="portfolio-category" value="aniversario-infantil">
+            
+            <!-- Botões de Seleção Rápida Visual (Exclusivo e Intuitivo) -->
+            <div class="category-quick-pills" id="category-quick-pills" style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" class="admin-btn admin-btn-sm cat-pill-btn" data-cat="aniversario-infantil">
+                <span>🧸 Aniversário Infantil</span>
+              </button>
+              <button type="button" class="admin-btn admin-btn-sm cat-pill-btn" data-cat="aniversario-adulto">
+                <span>🥂 Aniversário Adulto</span>
+              </button>
+              <button type="button" class="admin-btn admin-btn-sm cat-pill-btn" data-cat="casamentos">
+                <span>💍 Casamentos</span>
+              </button>
+              <button type="button" class="admin-btn admin-btn-sm cat-pill-btn" data-cat="cha-revelacao">
+                <span>🍼 Chá Revelação</span>
+              </button>
+              <button type="button" class="admin-btn admin-btn-sm cat-pill-btn" data-cat="batizados">
+                <span>🕊️ Batizados</span>
+              </button>
+              <button type="button" class="admin-btn admin-btn-sm cat-pill-btn" data-cat="formatura">
+                <span>🎓 Formatura</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <label class="form-label" style="margin: 0;">Fotos do Projeto (Até 3 Imagens)</label>
+              <button type="button" class="admin-btn admin-btn-sm admin-btn-secondary" id="btn-toggle-gallery">
+                <span>🎨 Galeria de Ideias</span>
+              </button>
+            </div>
+
+            <!-- Galeria de Sugestões Rápidas (Expansível) -->
+            <div class="gallery-presets-container" id="gallery-presets" style="display: none; background: #FAF7F6; padding: 12px; border-radius: 10px; border: 1px solid var(--admin-border); margin-bottom: 14px;">
+              <p style="font-size: 0.8rem; color: var(--admin-muted); margin-bottom: 8px; font-weight: 600;">Clique para preencher a foto selecionada:</p>
+              <div class="gallery-presets-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px;">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" class="preset-thumb" title="Casamento Rosé" alt="Casamento">
+                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=600&q=80" class="preset-thumb" title="Arranjo Floral" alt="Flores">
+                <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=600&q=80" class="preset-thumb" title="Cerimônia Nobre" alt="Cerimônia">
+                <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=600&q=80" class="preset-thumb" title="Jardim Encantado" alt="Infantil">
+                <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80" class="preset-thumb" title="Chá Revelação" alt="Chá Revelação">
+                <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=600&q=80" class="preset-thumb" title="Batizado & Velas" alt="Batizado">
+                <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=600&q=80" class="preset-thumb" title="Aniversário Adulto" alt="Aniversário">
+                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80" class="preset-thumb" title="Mesa Posta & Doces" alt="Mesa">
+                <img src="https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=600&q=80" class="preset-thumb" title="Bolo & Doces" alt="Bolo">
+              </div>
+            </div>
+
+            <!-- Grid de 3 Slots de Fotos -->
+            <div class="photos-slots-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px;">
+              
+              <!-- Slot 1: Foto Principal -->
+              <div class="photo-slot-card" data-slot="1" style="background: #FFFFFF; border: 1.5px solid var(--admin-border); border-radius: 10px; padding: 10px; text-align: center; position: relative;">
+                <div style="font-size: 0.8rem; font-weight: 700; color: var(--admin-primary); margin-bottom: 6px;">⭐ Foto 1 (Capa) *</div>
+                <input type="file" id="portfolio-file-1" accept="image/*" style="display: none;">
+                <input type="hidden" id="portfolio-img-url-1">
+
+                <div class="slot-preview-box" id="slot-box-1" style="width: 100%; height: 110px; border-radius: 8px; border: 1px dashed var(--admin-border); background: #FAF7F6; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; cursor: pointer;">
+                  <img src="" id="slot-img-1" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                  <span id="slot-placeholder-1" style="font-size: 0.78rem; color: var(--admin-muted);">📷 Clique p/ enviar</span>
+                </div>
+
+                <div style="display: flex; gap: 4px; justify-content: center;">
+                  <label for="portfolio-file-1" class="admin-btn admin-btn-sm admin-btn-primary" style="padding: 4px 8px; font-size: 0.75rem; cursor: pointer; display: inline-flex;" title="Escolher Arquivo">
+                    <span>📁 Arquivo</span>
+                  </label>
+                  <button type="button" class="admin-btn admin-btn-sm admin-btn-outline btn-prompt-url" data-slot="1" style="padding: 4px 8px; font-size: 0.75rem;" title="Informar Link/URL">
+                    <span>🔗 URL</span>
+                  </button>
+                  <button type="button" class="admin-btn admin-btn-sm admin-btn-danger btn-clear-slot" data-slot="1" style="padding: 4px 6px; font-size: 0.75rem;" title="Remover">
+                    <span>✕</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Slot 2: Foto Detalhe -->
+              <div class="photo-slot-card" data-slot="2" style="background: #FFFFFF; border: 1.5px solid var(--admin-border); border-radius: 10px; padding: 10px; text-align: center; position: relative;">
+                <div style="font-size: 0.8rem; font-weight: 600; color: var(--admin-text); margin-bottom: 6px;">📸 Foto 2 (Detalhe)</div>
+                <input type="file" id="portfolio-file-2" accept="image/*" style="display: none;">
+                <input type="hidden" id="portfolio-img-url-2">
+
+                <div class="slot-preview-box" id="slot-box-2" style="width: 100%; height: 110px; border-radius: 8px; border: 1px dashed var(--admin-border); background: #FAF7F6; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; cursor: pointer;">
+                  <img src="" id="slot-img-2" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                  <span id="slot-placeholder-2" style="font-size: 0.78rem; color: var(--admin-muted);">📷 Opcional</span>
+                </div>
+
+                <div style="display: flex; gap: 4px; justify-content: center;">
+                  <label for="portfolio-file-2" class="admin-btn admin-btn-sm admin-btn-secondary" style="padding: 4px 8px; font-size: 0.75rem; cursor: pointer; display: inline-flex;" title="Escolher Arquivo">
+                    <span>📁 Arquivo</span>
+                  </label>
+                  <button type="button" class="admin-btn admin-btn-sm admin-btn-outline btn-prompt-url" data-slot="2" style="padding: 4px 8px; font-size: 0.75rem;" title="Informar Link/URL">
+                    <span>🔗 URL</span>
+                  </button>
+                  <button type="button" class="admin-btn admin-btn-sm admin-btn-danger btn-clear-slot" data-slot="2" style="padding: 4px 6px; font-size: 0.75rem;" title="Remover">
+                    <span>✕</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Slot 3: Foto Ângulo Adicional -->
+              <div class="photo-slot-card" data-slot="3" style="background: #FFFFFF; border: 1.5px solid var(--admin-border); border-radius: 10px; padding: 10px; text-align: center; position: relative;">
+                <div style="font-size: 0.8rem; font-weight: 600; color: var(--admin-text); margin-bottom: 6px;">📸 Foto 3 (Cenário)</div>
+                <input type="file" id="portfolio-file-3" accept="image/*" style="display: none;">
+                <input type="hidden" id="portfolio-img-url-3">
+
+                <div class="slot-preview-box" id="slot-box-3" style="width: 100%; height: 110px; border-radius: 8px; border: 1px dashed var(--admin-border); background: #FAF7F6; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; cursor: pointer;">
+                  <img src="" id="slot-img-3" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                  <span id="slot-placeholder-3" style="font-size: 0.78rem; color: var(--admin-muted);">📷 Opcional</span>
+                </div>
+
+                <div style="display: flex; gap: 4px; justify-content: center;">
+                  <label for="portfolio-file-3" class="admin-btn admin-btn-sm admin-btn-secondary" style="padding: 4px 8px; font-size: 0.75rem; cursor: pointer; display: inline-flex;" title="Escolher Arquivo">
+                    <span>📁 Arquivo</span>
+                  </label>
+                  <button type="button" class="admin-btn admin-btn-sm admin-btn-outline btn-prompt-url" data-slot="3" style="padding: 4px 8px; font-size: 0.75rem;" title="Informar Link/URL">
+                    <span>🔗 URL</span>
+                  </button>
+                  <button type="button" class="admin-btn admin-btn-sm admin-btn-danger btn-clear-slot" data-slot="3" style="padding: 4px 6px; font-size: 0.75rem;" title="Remover">
+                    <span>✕</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="portfolio-desc">Descrição / Detalhes do Projeto</label>
+            <textarea class="form-control" id="portfolio-desc" rows="3" placeholder="Conte detalhes sobre as cores, flores e móveis utilizados..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="admin-btn admin-btn-outline" onclick="closeAdminModal('modal-portfolio')">Cancelar</button>
+          <button type="submit" class="admin-btn admin-btn-primary">Salvar Trabalho</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DE ALERTA DE IMAGEM INADEQUADA ==================== -->
+  <div class="admin-modal" id="modal-image-alert" role="dialog" aria-modal="true">
+    <div class="admin-modal-dialog" style="max-width: 480px;">
+      <div class="modal-header" style="background: #FFF7ED; border-bottom: 1px solid #FFEDD5;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.6rem;">⚠️</span>
+          <h3 id="modal-image-alert-title" style="color: #9A3412; margin: 0; font-size: 1.15rem;">Imagem Inadequada</h3>
+        </div>
+        <button class="modal-close-btn" onclick="closeAdminModal('modal-image-alert')">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 22px;">
+        <div id="modal-image-alert-reason" style="font-size: 0.95rem; color: #1F2937; line-height: 1.5; margin-bottom: 16px;"></div>
+        
+        <div style="background: #F3F4F6; border-left: 4px solid var(--admin-primary); padding: 12px 16px; border-radius: 6px; margin-bottom: 16px;">
+          <h5 style="margin: 0 0 6px 0; color: var(--admin-primary); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">💡 Como Resolver:</h5>
+          <ul id="modal-image-alert-tips" style="margin: 0; padding-left: 18px; font-size: 0.85rem; color: #4B5563; line-height: 1.5;">
+            <li>Use imagens nos formatos <strong>PNG, JPG ou WEBP</strong>.</li>
+            <li>Reduza fotos muito pesadas acima de <strong>8 MB</strong> para garantir carregamento rápido no site.</li>
+            <li>Você também pode utilizar caminhos locais na pasta <code>assets/</code> ou links da internet.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer" style="background: #F9FAFB;">
+        <button type="button" class="admin-btn admin-btn-primary" onclick="closeAdminModal('modal-image-alert')" style="width: 100%; justify-content: center;">
+          <span>Entendido, vou ajustar a foto</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DE CONFIRMAÇÃO ==================== -->
+  <div class="admin-modal" id="modal-confirm" role="dialog" aria-modal="true">
+    <div class="admin-modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 id="modal-confirm-title">Confirmar Ação</h3>
+        <button class="modal-close-btn" onclick="closeAdminModal('modal-confirm')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="modal-confirm-message" style="font-size: 0.95rem; color: var(--admin-text);"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="admin-btn admin-btn-outline" onclick="closeAdminModal('modal-confirm')">Cancelar</button>
+        <button type="button" class="admin-btn admin-btn-danger" id="btn-confirm-action">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CONTAINER DE TOAST NOTIFICATIONS ==================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
