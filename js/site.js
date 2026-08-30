@@ -130,15 +130,6 @@ function renderCategories(data) {
     { id: 'formatura', name: 'Formatura', icon: '🎓' }
   ];
 
-  const OFFICIAL_CATEGORY_ICONS = {
-    'aniversario-infantil': '🧸',
-    'aniversario-adulto': '🥂',
-    'casamentos': '💍',
-    'cha-revelacao': '🍼',
-    'batizados': '🕊️',
-    'formatura': '🎓'
-  };
-
   const categories = (data && Array.isArray(data.categories) && data.categories.length > 0)
     ? data.categories
     : defaultCats;
@@ -153,11 +144,9 @@ function renderCategories(data) {
     item.setAttribute('tabindex', '0');
     item.setAttribute('aria-label', `Filtrar por categoria ${cat.name}`);
 
-    const iconDisplay = cat.icon || OFFICIAL_CATEGORY_ICONS[cat.id] || '✨';
-
     item.innerHTML = `
       <div class="story-ring">
-        <div class="story-inner">${iconDisplay}</div>
+        <div class="story-inner">${cat.icon || '✨'}</div>
       </div>
       <span class="story-label">${window.SecurityUtils.escapeHtml(cat.name)}</span>
     `;
@@ -226,76 +215,27 @@ function renderServices(data) {
 
   container.innerHTML = '';
 
-  // Retorna o ícone vetorial SVG padronizado e elegante para cada serviço
-  const getServiceSvgIcon = (iconName, title = '') => {
-    const norm = (iconName || '').toLowerCase().trim();
-    const titleNorm = (title || '').toLowerCase().trim();
-
-    // 1. Cenografia & Painéis Temáticos
-    if (norm === 'box' || norm === 'scenery' || norm === 'panels' || titleNorm.includes('cenografia') || titleNorm.includes('pain') || titleNorm.includes('arco')) {
-      return `
-        <svg class="service-svg-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 21h18"/>
-          <path d="M5 21V9a7 7 0 0 1 14 0v12"/>
-          <path d="M9 21V12a3 3 0 0 1 6 0v9"/>
-          <path d="M12 3v3"/>
-        </svg>
-      `;
+  const getServiceIcon = (iconName) => {
+    switch (iconName) {
+      case 'sparkles': return '✨';
+      case 'box': return '🎁';
+      case 'palette': return '🎨';
+      case 'cake': return '🎂';
+      default: return '🌸';
     }
-
-    // 2. Decoração Personalizada
-    if (norm === 'palette' || norm === 'custom' || titleNorm.includes('personalizad') || titleNorm.includes('medida') || titleNorm.includes('exclusiv')) {
-      return `
-        <svg class="service-svg-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="13.5" cy="6.5" r="1" fill="currentColor"/>
-          <circle cx="17.5" cy="10.5" r="1" fill="currentColor"/>
-          <circle cx="8.5" cy="7.5" r="1" fill="currentColor"/>
-          <circle cx="6.5" cy="12.5" r="1" fill="currentColor"/>
-          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.5 17.5 2 12 2Z"/>
-        </svg>
-      `;
-    }
-
-    // 3. Mesa de Doces & Bolo
-    if (norm === 'cake' || norm === 'dessert' || titleNorm.includes('bolo') || titleNorm.includes('doce') || titleNorm.includes('mesa')) {
-      return `
-        <svg class="service-svg-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/>
-          <path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/>
-          <path d="M2 21h20"/>
-          <path d="M7 8v2"/>
-          <path d="M12 8v2"/>
-          <path d="M17 8v2"/>
-          <path d="M7 4h.01"/>
-          <path d="M12 4h.01"/>
-          <path d="M17 4h.01"/>
-        </svg>
-      `;
-    }
-
-    // 4. Decoração Completa / Padrão (Sparkles)
-    return `
-      <svg class="service-svg-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
-        <path d="M5 3v4"/>
-        <path d="M3 5h4"/>
-        <path d="M19 17v4"/>
-        <path d="M17 19h4"/>
-      </svg>
-    `;
   };
 
   data.services.forEach(srv => {
     const card = document.createElement('div');
     card.className = 'service-card';
 
-    const iconSvg = getServiceSvgIcon(srv.icon, srv.title);
+    const iconEmoji = getServiceIcon(srv.icon);
     const badgeHtml = srv.badge ? `<span class="service-badge">${window.SecurityUtils.escapeHtml(srv.badge)}</span>` : '';
 
     card.innerHTML = `
       <div>
         <div class="service-header">
-          <div class="service-icon-box">${iconSvg}</div>
+          <div class="service-icon-box">${iconEmoji}</div>
           ${badgeHtml}
         </div>
         <h3 class="service-title">${window.SecurityUtils.escapeHtml(srv.title)}</h3>
@@ -349,8 +289,7 @@ function renderPortfolio(data) {
       const btn = document.createElement('button');
       btn.className = 'filter-btn';
       btn.dataset.filter = cat.id;
-      const iconDisplay = cat.icon || OFFICIAL_CATEGORY_ICONS[cat.id] || '🏷️';
-      btn.innerHTML = `<span>${iconDisplay} ${window.SecurityUtils.escapeHtml(cat.name)}</span>`;
+      btn.innerHTML = `<span>${cat.icon || '🏷️'} ${window.SecurityUtils.escapeHtml(cat.name)}</span>`;
       filterButtonsContainer.appendChild(btn);
     });
 
@@ -405,7 +344,7 @@ function filterPortfolio(category) {
 
     const imagesList = Array.isArray(item.images) && item.images.length > 0 ? item.images : [item.imageUrl];
     const photosPillHtml = imagesList.length > 1 
-      ? `<span class="portfolio-photos-pill"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: -1.5px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>${imagesList.length} fotos</span>` 
+      ? `<span class="portfolio-photos-pill">📸 ${imagesList.length} fotos</span>` 
       : '';
 
     card.innerHTML = `
@@ -415,13 +354,7 @@ function filterPortfolio(category) {
         <div class="portfolio-overlay">
           <span class="portfolio-tag">${window.SecurityUtils.escapeHtml(item.categoryName || item.category)}</span>
           <h3 class="portfolio-title">${window.SecurityUtils.escapeHtml(item.title)}</h3>
-          <span class="portfolio-meta">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px; vertical-align: -2px;">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            Clique para ver ${imagesList.length > 1 ? `as ${imagesList.length} fotos` : 'a foto'}
-          </span>
+          <span class="portfolio-meta">🔍 Clique para ver ${imagesList.length > 1 ? `as ${imagesList.length} fotos` : 'a foto'}</span>
         </div>
       </div>
     `;
@@ -709,139 +642,75 @@ function closeLightbox() {
 }
 
 /**
- * 8. Animações de Rolagem Suave e Efeitos Bidirecionais (Scroll Reveal ao Descer e Subir)
+ * 8. Animações de Rolagem Suave (Scroll Reveal)
  */
 function setupScrollAnimations() {
+  // Efeito dinâmico no cabeçalho ao rolar
   const header = document.querySelector('.site-header');
-  const backToTopBtn = document.getElementById('back-to-top-btn');
-  const progressBar = document.getElementById('scroll-progress-bar');
-  let lastScrollY = window.scrollY;
-
-  // Atualiza a barra de progresso no topo da tela em tempo real
-  const updateScrollProgress = () => {
-    const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
-    if (progressBar) {
-      progressBar.style.width = `${scrolled}%`;
-    }
-  };
-
-  // Efeito translúcido suave no cabeçalho e visibilidade do botão voltar ao topo
-  const updateHeaderAndScroll = () => {
-    const currentScrollY = window.scrollY;
-
-    // Header com efeito de vidro fosco transparente fixo
-    if (currentScrollY > 15) {
+  const updateHeader = () => {
+    if (window.scrollY > 20) {
       header?.classList.add('scrolled');
     } else {
       header?.classList.remove('scrolled');
     }
+  };
 
-    // Botão Voltar ao Topo
-    if (backToTopBtn) {
-      if (currentScrollY > 320) {
-        backToTopBtn.classList.add('visible');
+  window.addEventListener('scroll', updateHeader, { passive: true });
+  updateHeader();
+
+  // Seleciona todos os elementos visuais para animar
+  const elements = document.querySelectorAll(`
+    .section-header,
+    .service-card,
+    .portfolio-card,
+    .about-visual,
+    .about-content,
+    .cta-box,
+    .story-item,
+    .footer-col,
+    .footer-brand
+  `);
+
+  elements.forEach((el, index) => {
+    if (!el.classList.contains('reveal-on-scroll') && 
+        !el.classList.contains('reveal-left') && 
+        !el.classList.contains('reveal-right') && 
+        !el.classList.contains('reveal-zoom')) {
+      
+      if (el.classList.contains('about-visual')) {
+        el.classList.add('reveal-left');
+      } else if (el.classList.contains('about-content')) {
+        el.classList.add('reveal-right');
+      } else if (el.classList.contains('cta-box')) {
+        el.classList.add('reveal-zoom');
       } else {
-        backToTopBtn.classList.remove('visible');
+        el.classList.add('reveal-on-scroll');
       }
     }
-  };
 
-    lastScrollY = currentScrollY;
-  };
+    // Delay escalonado para cartões adjacentes
+    if (el.classList.contains('service-card') || el.classList.contains('portfolio-card') || el.classList.contains('story-item')) {
+      const delay = (index % 3) * 0.12;
+      el.style.transitionDelay = `${delay}s`;
+    }
+  });
 
-  // Clique no botão voltar ao topo com animação suave
-  if (backToTopBtn) {
-    backToTopBtn.onclick = () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    };
-  }
-
-  const queryAnimatedElements = () => {
-    return document.querySelectorAll(`
-      .section-header,
-      .service-card,
-      .portfolio-card,
-      .about-visual,
-      .about-content,
-      .about-quote,
-      .cta-box,
-      .story-item,
-      .hero-visual,
-      .hero-features,
-      .footer-col,
-      .footer-brand
-    `);
-  };
-
-  const applyInitialAnimationClasses = () => {
-    const elements = queryAnimatedElements();
-    elements.forEach((el, index) => {
-      if (!el.classList.contains('reveal-on-scroll') && 
-          !el.classList.contains('reveal-left') && 
-          !el.classList.contains('reveal-right') && 
-          !el.classList.contains('reveal-zoom')) {
-        
-        if (el.classList.contains('about-visual')) {
-          el.classList.add('reveal-left');
-        } else if (el.classList.contains('about-content')) {
-          el.classList.add('reveal-right');
-        } else if (el.classList.contains('cta-box')) {
-          el.classList.add('reveal-zoom');
-        } else {
-          el.classList.add('reveal-on-scroll');
-        }
-      }
-
-      // Delay escalonado para cartões adjacentes
-      if (el.classList.contains('service-card') || el.classList.contains('portfolio-card') || el.classList.contains('story-item')) {
-        const delay = (index % 3) * 0.1;
-        el.style.transitionDelay = `${delay}s`;
-      }
-    });
-  };
-
-  applyInitialAnimationClasses();
-
-  // Verificação Bidirecional de Visibilidade (Anima tanto ao descer quanto ao subir)
-  const checkVisibilityBidirectional = () => {
-    const elements = queryAnimatedElements();
-    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-    const triggerEnter = windowHeight * 0.90; // Entra na tela
-    const triggerExitTop = -120; // Saiu por cima
-    const triggerExitBottom = windowHeight + 100; // Saiu por baixo
-
+  // Função para verificar elementos visíveis na janela
+  const checkVisibility = () => {
+    const triggerBottom = window.innerHeight * 0.92;
     elements.forEach(el => {
-      const rect = el.getBoundingClientRect();
-      
-      // Se o elemento está dentro da área de visualização
-      if (rect.top <= triggerEnter && rect.bottom >= 40) {
+      const boxTop = el.getBoundingClientRect().top;
+      if (boxTop < triggerBottom) {
         el.classList.add('reveal-visible');
-      } else if (rect.top > triggerExitBottom || rect.bottom < triggerExitTop) {
-        // Quando sai completamente da área visível (para cima ou para baixo), reseta para animar de novo ao rolar!
-        el.classList.remove('reveal-visible');
       }
     });
   };
 
-  const onScrollHandler = () => {
-    updateScrollProgress();
-    updateHeaderAndScroll();
-    checkVisibilityBidirectional();
-  };
-
-  window.addEventListener('scroll', onScrollHandler, { passive: true });
-  window.addEventListener('resize', onScrollHandler, { passive: true });
+  window.addEventListener('scroll', checkVisibility, { passive: true });
+  window.addEventListener('resize', checkVisibility, { passive: true });
 
   // Executa imediatamente e após renderizações
-  updateScrollProgress();
-  updateHeaderAndScroll();
-  setTimeout(checkVisibilityBidirectional, 50);
-  setTimeout(checkVisibilityBidirectional, 250);
-  setTimeout(checkVisibilityBidirectional, 600);
+  setTimeout(checkVisibility, 50);
+  setTimeout(checkVisibility, 250);
 }
 window.setupScrollAnimations = setupScrollAnimations;
