@@ -709,21 +709,67 @@ function closeLightbox() {
 }
 
 /**
- * 8. Animações de Rolagem Suave Bidirecionais (Scroll Reveal ao Descer e Subir)
+ * 8. Animações de Rolagem Suave e Efeitos Bidirecionais (Scroll Reveal ao Descer e Subir)
  */
 function setupScrollAnimations() {
-  // Efeito dinâmico no cabeçalho ao rolar
   const header = document.querySelector('.site-header');
-  const updateHeader = () => {
-    if (window.scrollY > 20) {
+  const backToTopBtn = document.getElementById('back-to-top-btn');
+  const progressBar = document.getElementById('scroll-progress-bar');
+  let lastScrollY = window.scrollY;
+
+  // Atualiza a barra de progresso no topo da tela em tempo real
+  const updateScrollProgress = () => {
+    const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+    if (progressBar) {
+      progressBar.style.width = `${scrolled}%`;
+    }
+  };
+
+  // Efeito dinâmico no cabeçalho e botão voltar ao topo
+  const updateHeaderAndScrollDirection = () => {
+    const currentScrollY = window.scrollY;
+
+    // Header com efeito de vidro fosco
+    if (currentScrollY > 20) {
       header?.classList.add('scrolled');
     } else {
       header?.classList.remove('scrolled');
     }
+
+    // Detecção de direção da rolagem (Descendo vs Subindo)
+    if (currentScrollY > lastScrollY && currentScrollY > 80) {
+      // Descendo
+      header?.classList.add('header-scroll-down');
+      header?.classList.remove('header-scroll-up');
+    } else if (currentScrollY < lastScrollY) {
+      // Subindo
+      header?.classList.add('header-scroll-up');
+      header?.classList.remove('header-scroll-down');
+    }
+
+    // Botão Voltar ao Topo
+    if (backToTopBtn) {
+      if (currentScrollY > 320) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    }
+
+    lastScrollY = currentScrollY;
   };
 
-  window.addEventListener('scroll', updateHeader, { passive: true });
-  updateHeader();
+  // Clique no botão voltar ao topo com animação suave
+  if (backToTopBtn) {
+    backToTopBtn.onclick = () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    };
+  }
 
   const queryAnimatedElements = () => {
     return document.querySelectorAll(`
@@ -792,10 +838,18 @@ function setupScrollAnimations() {
     });
   };
 
-  window.addEventListener('scroll', checkVisibilityBidirectional, { passive: true });
-  window.addEventListener('resize', checkVisibilityBidirectional, { passive: true });
+  const onScrollHandler = () => {
+    updateScrollProgress();
+    updateHeaderAndScrollDirection();
+    checkVisibilityBidirectional();
+  };
+
+  window.addEventListener('scroll', onScrollHandler, { passive: true });
+  window.addEventListener('resize', onScrollHandler, { passive: true });
 
   // Executa imediatamente e após renderizações
+  updateScrollProgress();
+  updateHeaderAndScrollDirection();
   setTimeout(checkVisibilityBidirectional, 50);
   setTimeout(checkVisibilityBidirectional, 250);
   setTimeout(checkVisibilityBidirectional, 600);

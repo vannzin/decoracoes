@@ -1845,16 +1845,80 @@ button {
   transform: scale(1) translateY(0) !important;
 }
 
+/* ==================== BARRA DE PROGRESSO DE ROLAGEM ==================== */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3.5px;
+  width: 0%;
+  background: var(--rose-gold-gradient);
+  z-index: 2100;
+  box-shadow: 0 1px 8px rgba(201, 122, 110, 0.65);
+  transition: width 0.08s ease-out;
+  pointer-events: none;
+}
+
+/* ==================== BOTÃO FLUTUANTE VOLTAR AO TOPO ==================== */
+.back-to-top-btn {
+  position: fixed;
+  bottom: 95px;
+  right: 22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: var(--rose-600);
+  border: 1.5px solid var(--rose-300);
+  box-shadow: 0 4px 18px rgba(201, 122, 110, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(18px) scale(0.9);
+  transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  z-index: 998;
+}
+
+.back-to-top-btn.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.back-to-top-btn:hover {
+  background: var(--rose-gold-gradient);
+  color: #FFFFFF;
+  border-color: transparent;
+  transform: translateY(-4px) scale(1.08);
+  box-shadow: 0 8px 24px rgba(201, 122, 110, 0.45);
+}
+
+.back-to-top-btn:active {
+  transform: translateY(0) scale(0.95);
+}
+
 /* Efeito no cabeçalho ao rolar */
 .site-header {
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+  transition: background-color 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1), backdrop-filter 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .site-header.scrolled {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 4px 25px rgba(201, 122, 110, 0.12);
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 6px 28px rgba(201, 122, 110, 0.14);
+}
+
+.site-header.header-scroll-down {
+  transform: translateY(-2px);
+}
+
+.site-header.header-scroll-up {
+  transform: translateY(0);
+  box-shadow: 0 8px 30px rgba(201, 122, 110, 0.18);
 }
 
 /* ========================================================================== 
