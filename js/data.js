@@ -447,15 +447,53 @@ const DataManager = {
       IndexedDBStorage.set('auth_data', authObj);
     } catch (e) {}
 
+    // 4. Se estiver em ambiente HTTP/HTTPS (Railway / Nuvem), persiste online na API para todos os IPs
+    if (typeof window !== 'undefined' && window.location && window.location.protocol.startsWith('http')) {
+      fetch('/api/auth/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user: cleanUser, pass: cleanPass })
+      }).catch(err => console.warn('Aviso: API Railway offline ou executando localmente:', err));
+    }
+
     return authObj;
+  },
+
+  // Sincroniza dados e credenciais da nuvem (Railway) no boot
+  async syncWithServer() {
+    try {
+      if (typeof window !== 'undefined' && window.location && window.location.protocol.startsWith('http')) {
+        const res = await fetch('/api/data');
+        if (res.ok) {
+          const serverData = await res.json();
+          if (serverData && typeof serverData === 'object') {
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(serverData));
+              IndexedDBStorage.set('app_data', serverData);
+              if (serverData.auth) {
+                localStorage.setItem('decoracoes_mary_auth_credentials', JSON.stringify(serverData.auth));
+                IndexedDBStorage.set('auth_data', serverData.auth);
+              }
+            } catch (_) {}
+            return serverData;
+          }
+        }
+      }
+    } catch (e) {
+      // Offline ou estático - continua com dados locais
+    }
+    return null;
   },
 
   // Restaura as credenciais para o padrão de fábrica
   resetAuth() {
+    if (typeof window !== 'undefined' && window.location && window.location.protocol.startsWith('http')) {
+      fetch('/api/auth/reset', { method: 'POST' }).catch(() => {});
+    }
     return this.saveAuth('admin', 'mary123');
   },
 
-  // Salva os dados no Armazenamento Híbrido (IndexedDB + LocalStorage) e notifica a aplicação
+  // Salva os dados no Armazenamento Híbrido (IndexedDB + LocalStorage + Nuvem Railway) e notifica a aplicação
   save(data, dispatch = true) {
     try {
       const dataToSave = {
@@ -471,6 +509,15 @@ const DataManager = {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
       } catch (lsErr) {
         console.warn('LocalStorage cota excedida, preservado com sucesso no IndexedDB:', lsErr);
+      }
+
+      // Salva na nuvem no Railway para todos os IPs e dispositivos
+      if (typeof window !== 'undefined' && window.location && window.location.protocol.startsWith('http')) {
+        fetch('/api/data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dataToSave)
+        }).catch(err => console.warn('Aviso: API Railway offline ou estático:', err));
       }
       
       if (dispatch) {

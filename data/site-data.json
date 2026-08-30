@@ -1,0 +1,162 @@
+﻿{
+  "company": {
+    "name": "DecoraÃ§Ãµes by Mary",
+    "slogan": "Transformando momentos especiais em memÃ³rias inesquecÃ­veis.",
+    "description": "Especialistas em decoraÃ§Ãµes elegantes para aniversÃ¡rios, casamentos, batizados, chÃ¡s revelaÃ§Ã£o e eventos corporativos.",
+    "whatsapp": "5531999998888",
+    "whatsappFormatted": "(31) 99999-8888",
+    "whatsappMessage": "OlÃ¡! Encontrei o site da DecoraÃ§Ãµes by Mary e gostaria de solicitar um orÃ§amento para meu evento em Contagem e regiÃ£o.",
+    "instagram": "https://www.instagram.com/decoracoesbymary/",
+    "instagramHandle": "@decoracoesbymary",
+    "location": "MG - CONTAGEM",
+    "email": "contato@decoracoesbymary.com.br"
+  },
+  "hero": {
+    "badge": "âœ¨ DecoraÃ§Ãµes Exclusivas & Festas InesquecÃ­veis",
+    "title": "A magia dos seus sonhos em cada detalhe",
+    "subtitle": "Criamos cenÃ¡rios deslumbrantes com sofisticaÃ§Ã£o, delicadeza e amor para tornar a sua comemoraÃ§Ã£o Ãºnica e marcante.",
+    "primaryButtonText": "Solicitar OrÃ§amento",
+    "secondaryButtonText": "Ver Nosso PortfÃ³lio"
+  },
+  "categories": [
+    { "id": "aniversario-infantil", "name": "AniversÃ¡rio Infantil", "icon": "ðŸ§¸" },
+    { "id": "aniversario-adulto", "name": "AniversÃ¡rio Adulto", "icon": "ðŸ¥‚" },
+    { "id": "casamentos", "name": "Casamentos", "icon": "ðŸ’" },
+    { "id": "cha-revelacao", "name": "ChÃ¡ RevelaÃ§Ã£o", "icon": "ðŸ¼" },
+    { "id": "batizados", "name": "Batizados", "icon": "ðŸ•Šï¸" },
+    { "id": "formatura", "name": "Formatura", "icon": "ðŸŽ“" }
+  ],
+  "services": [
+    {
+      "id": "srv_1",
+      "title": "DecoraÃ§Ã£o Completa",
+      "description": "Planejamento e montagem completa do seu evento com mobiliÃ¡rio refinado, painÃ©is, arranjos e iluminaÃ§Ã£o de alto padrÃ£o.",
+      "badge": "Mais Pedido",
+      "icon": "sparkles"
+    },
+    {
+      "id": "srv_2",
+      "title": "Cenografia & PainÃ©is TemÃ¡ticos",
+      "description": "Estruturas completas com painÃ©is sublimados, arcos orgÃ¢nicos de balÃµes, iluminaÃ§Ã£o de destaque e ambientaÃ§Ã£o temÃ¡tica para fotos perfeitas.",
+      "badge": "Destaque",
+      "icon": "cenografia"
+    },
+    {
+      "id": "srv_3",
+      "title": "DecoraÃ§Ã£o Personalizada",
+      "description": "Desenvolvemos um projeto visual Ãºnico de acordo com seu sonho, paleta de cores e o espaÃ§o disponÃ­vel.",
+      "badge": "Exclusivo",
+      "icon": "palette"
+    },
+    {
+      "id": "srv_4",
+      "title": "Mesa de Doces & Bolo",
+      "description": "ComposiÃ§Ãµes harmÃ´nicas e elegantes para valorizar o ponto alto da sua festa com suportes nobres e arranjos florais.",
+      "badge": "Essencial",
+      "icon": "cake"
+    }
+  ],
+  "portfolio": [
+    {
+      "id": "port_1",
+      "title": "Bosque Encantado dos Ursos",
+      "category": "aniversario-infantil",
+      "categoryName": "AniversÃ¡rio Infantil",
+      "imageUrl": "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=800&q=80",
+      "description": "DecoraÃ§Ã£o mÃ¡gica e rica em detalhes com arcos orgÃ¢nicos em tons pastÃ©is e personagens delicados.",
+      "date": "2026-02-15",
+      "images": [
+        "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=800&q=80"
+      ]
+    },
+    {
+      "id": "port_2",
+      "title": "Mini Wedding RosÃ© Gold",
+      "category": "casamentos",
+      "categoryName": "Casamentos",
+      "imageUrl": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
+      "description": "ComposiÃ§Ã£o intimista com flores nobres, velas aromÃ¡ticas e detalhes em rosÃ© gold.",
+      "date": "2026-02-20",
+      "images": [
+        "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=800&q=80"
+      ]
+    },
+    {
+      "id": "port_3",
+      "title": "ChÃ¡ RevelaÃ§Ã£o Sonho de AlgodÃ£o",
+      "category": "cha-revelacao",
+      "categoryName": "ChÃ¡ RevelaÃ§Ã£o",
+      "imageUrl": "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=800&q=80",
+      "description": "Paleta suave em azul bebÃª e rosa chÃ¡ com iluminaÃ§Ã£o de destaque e cenografia afetiva.",
+      "date": "2026-02-10",
+      "images": [
+        "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=800&q=80"
+      ]
+    },
+    {
+      "id": "port_4",
+      "title": "Batizado Angelical Puro Branco",
+      "category": "batizados",
+      "categoryName": "Batizados",
+      "imageUrl": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80",
+      "description": "ElegÃ¢ncia minimalista com flores brancas, tecidos nobres e sÃ­mbolos delicados de fÃ©.",
+      "date": "2026-01-28",
+      "images": [
+        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80"
+      ]
+    },
+    {
+      "id": "port_5",
+      "title": "Festa 30 Anos Elegance Gold",
+      "category": "aniversario-adulto",
+      "categoryName": "AniversÃ¡rio Adulto",
+      "imageUrl": "assets/2.png",
+      "description": "Cenografia sofisticada com painel ripado, balÃµes orgÃ¢nicos cromados e mesa espelhada.",
+      "date": "2026-02-02",
+      "images": [
+        "assets/2.png",
+        "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80"
+      ]
+    },
+    {
+      "id": "port_6",
+      "title": "Baile de Gala & Formatura",
+      "category": "formatura",
+      "categoryName": "Formatura",
+      "imageUrl": "assets/1.png",
+      "description": "Lustres de cristal, mesa de doces imperial e pontos instagramÃ¡veis memorÃ¡veis.",
+      "date": "2026-01-15",
+      "images": [
+        "assets/1.png",
+        "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80"
+      ]
+    }
+  ],
+  "about": {
+    "title": "Sobre a DecoraÃ§Ãµes by Mary",
+    "subtitle": "Amor, cuidado e excelÃªncia em cada projeto",
+    "text": "A DecoraÃ§Ãµes by Mary nasceu com o propÃ³sito de transformar momentos especiais em experiÃªncias verdadeiramente inesquecÃ­veis. Cada detalhe Ã© pensado com carinho, tÃ©cnica e sensibilidade para tornar sua celebraÃ§Ã£o Ãºnica.",
+    "highlightText": "â€œA festa comeÃ§a antes do parabÃ©ns: comeÃ§a quando cada detalhe faz a pessoa sorrir.â€",
+    "quote": "â€œA festa comeÃ§a antes do parabÃ©ns: comeÃ§a quando cada detalhe faz a pessoa sorrir.â€",
+    "imageUrl": "assets/logo-mary.jpg",
+    "logoUrl": "assets/logo-mary.jpg",
+    "stats": [
+      { "number": "500+", "label": "Festas Realizadas" },
+      { "number": "100%", "label": "Clientes Satisfeitos" },
+      { "number": "5+", "label": "Anos de HistÃ³ria" }
+    ]
+  },
+  "auth": {
+    "user": "admin",
+    "pass": "mary123",
+    "isDefault": true,
+    "updatedAt": "2026-08-30T18:50:00.000Z"
+  },
+  "lastUpdated": "2026-08-30T18:50:00.000Z"
+}

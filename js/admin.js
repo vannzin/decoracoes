@@ -158,15 +158,46 @@ function initAuth() {
     adminLayout.classList.remove('active');
   }
 
-  // Submissão do login
+  // Sincroniza dados da nuvem no boot
+  if (window.DataManager && typeof window.DataManager.syncWithServer === 'function') {
+    window.DataManager.syncWithServer().then(() => {
+      updateAuthStatusBadge();
+    }).catch(() => {});
+  }
+
+  // Submissão do login (Validação Online Global para Qualquer IP + Fallback Local)
   if (loginForm) {
-    loginForm.onsubmit = (e) => {
+    loginForm.onsubmit = async (e) => {
       e.preventDefault();
       const user = document.getElementById('login-username').value.trim();
       const pass = document.getElementById('login-password').value.trim();
-      const currentAuth = getAdminAuth();
 
-      if (user === currentAuth.user && pass === currentAuth.pass) {
+      // 1. Tenta validação online via API Railway (Central para todos os IPs)
+      let onlineValidated = false;
+      if (typeof window !== 'undefined' && window.location && window.location.protocol.startsWith('http')) {
+        try {
+          const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user, pass })
+          });
+          const result = await res.json();
+          if (res.ok && result.success) {
+            onlineValidated = true;
+            // Salva token e sincroniza
+            if (result.token) sessionStorage.setItem('admin_token', result.token);
+            if (window.DataManager) window.DataManager.syncWithServer().catch(() => {});
+          }
+        } catch (netErr) {
+          console.warn('API de login online indisponível, utilizando validação local:', netErr);
+        }
+      }
+
+      // 2. Validação Local de Fallback
+      const currentAuth = getAdminAuth();
+      const localValidated = (user === currentAuth.user && pass === currentAuth.pass);
+
+      if (onlineValidated || localValidated) {
         sessionStorage.setItem(AUTH_CONFIG.sessionKey, 'true');
         showToast(`Login realizado com sucesso! Bem-vinda(o), ${user}.`, 'success');
         loginScreen.style.display = 'none';
