@@ -447,10 +447,19 @@ function setupMobileMenu() {
       toggleBtn.setAttribute('aria-expanded', 'false');
     };
   });
+
+  // Fecha o menu ao clicar fora dele
+  document.addEventListener('click', (e) => {
+    if (navLinks.classList.contains('active') && !navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+      toggleBtn.classList.remove('active');
+      navLinks.classList.remove('active');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
 }
 
 /**
- * 8. Lightbox / Visualização Ampliada (Com suporte a múltiplas fotos)
+ * 8. Lightbox / Visualização Ampliada (Com suporte a múltiplas fotos e Touch Swipe)
  */
 let currentLightboxImages = [];
 let currentLightboxIndex = 0;
@@ -482,6 +491,28 @@ function setupLightbox() {
       navigateLightbox(1);
     };
   }
+
+  // Suporte a Touch Swipe no Celular
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  modal.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  modal.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    const swipeDistance = touchEndX - touchStartX;
+    if (Math.abs(swipeDistance) > 40) {
+      if (swipeDistance < 0) {
+        // Arrastou para a esquerda -> Próxima foto
+        navigateLightbox(1);
+      } else {
+        // Arrastou para a direita -> Foto anterior
+        navigateLightbox(-1);
+      }
+    }
+  }, { passive: true });
 
   document.addEventListener('keydown', (e) => {
     if (!modal.classList.contains('active')) return;
