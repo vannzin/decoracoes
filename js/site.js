@@ -130,6 +130,15 @@ function renderCategories(data) {
     { id: 'formatura', name: 'Formatura', icon: '🎓' }
   ];
 
+  const OFFICIAL_CATEGORY_ICONS = {
+    'aniversario-infantil': '🧸',
+    'aniversario-adulto': '🥂',
+    'casamentos': '💍',
+    'cha-revelacao': '🍼',
+    'batizados': '🕊️',
+    'formatura': '🎓'
+  };
+
   const categories = (data && Array.isArray(data.categories) && data.categories.length > 0)
     ? data.categories
     : defaultCats;
@@ -144,9 +153,11 @@ function renderCategories(data) {
     item.setAttribute('tabindex', '0');
     item.setAttribute('aria-label', `Filtrar por categoria ${cat.name}`);
 
+    const iconDisplay = cat.icon || OFFICIAL_CATEGORY_ICONS[cat.id] || '✨';
+
     item.innerHTML = `
       <div class="story-ring">
-        <div class="story-inner">${cat.icon || '✨'}</div>
+        <div class="story-inner">${iconDisplay}</div>
       </div>
       <span class="story-label">${window.SecurityUtils.escapeHtml(cat.name)}</span>
     `;
@@ -338,7 +349,8 @@ function renderPortfolio(data) {
       const btn = document.createElement('button');
       btn.className = 'filter-btn';
       btn.dataset.filter = cat.id;
-      btn.innerHTML = `<span>${cat.icon || '🏷️'} ${window.SecurityUtils.escapeHtml(cat.name)}</span>`;
+      const iconDisplay = cat.icon || OFFICIAL_CATEGORY_ICONS[cat.id] || '🏷️';
+      btn.innerHTML = `<span>${iconDisplay} ${window.SecurityUtils.escapeHtml(cat.name)}</span>`;
       filterButtonsContainer.appendChild(btn);
     });
 
