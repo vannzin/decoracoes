@@ -150,6 +150,9 @@ function switchAdminTab(tabId) {
   // Fecha sidebar no mobile caso esteja aberta
   const sidebar = document.getElementById('admin-sidebar');
   if (sidebar) sidebar.classList.remove('mobile-open');
+  document.querySelector('.admin-sidebar-backdrop')?.classList.remove('active');
+  document.body.classList.remove('admin-menu-open');
+  document.getElementById('mobile-sidebar-toggle')?.setAttribute('aria-expanded', 'false');
 }
 window.switchAdminTab = switchAdminTab;
 
@@ -1255,9 +1258,35 @@ window.showToast = showToast;
 function setupMobileSidebar() {
   const toggleBtn = document.getElementById('mobile-sidebar-toggle');
   const sidebar = document.getElementById('admin-sidebar');
-  if (toggleBtn && sidebar) {
-    toggleBtn.onclick = () => {
-      sidebar.classList.toggle('mobile-open');
-    };
+  if (!toggleBtn || !sidebar) return;
+
+  let backdrop = document.querySelector('.admin-sidebar-backdrop');
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.className = 'admin-sidebar-backdrop';
+    backdrop.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(backdrop);
   }
+
+  const setOpen = (open) => {
+    sidebar.classList.toggle('mobile-open', open);
+    backdrop.classList.toggle('active', open);
+    document.body.classList.toggle('admin-menu-open', open);
+    toggleBtn.setAttribute('aria-expanded', String(open));
+  };
+
+  toggleBtn.onclick = (event) => {
+    event.stopPropagation();
+    setOpen(!sidebar.classList.contains('mobile-open'));
+  };
+
+  backdrop.onclick = () => setOpen(false);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setOpen(false);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 900) setOpen(false);
+  });
 }

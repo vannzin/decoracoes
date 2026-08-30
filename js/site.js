@@ -432,30 +432,65 @@ function setupMobileMenu() {
 
   if (!toggleBtn || !navLinks) return;
 
-  // Toggle do menu
-  toggleBtn.onclick = () => {
-    const isActive = toggleBtn.classList.toggle('active');
-    navLinks.classList.toggle('active');
-    toggleBtn.setAttribute('aria-expanded', String(isActive));
+  const closeMenu = () => {
+    toggleBtn.classList.remove('active');
+    navLinks.classList.remove('active');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('mobile-nav-open');
   };
 
-  // Fecha o menu ao clicar em qualquer link
+  // onclick é sobrescrito a cada initSite, evitando listeners duplicados.
+  toggleBtn.onclick = (event) => {
+    event.stopPropagation();
+    const willOpen = !navLinks.classList.contains('active');
+    toggleBtn.classList.toggle('active', willOpen);
+    navLinks.classList.toggle('active', willOpen);
+    toggleBtn.setAttribute('aria-expanded', String(willOpen));
+    document.body.classList.toggle('mobile-nav-open', willOpen);
+  };
+
   navLinks.querySelectorAll('a').forEach(link => {
-    link.onclick = () => {
-      toggleBtn.classList.remove('active');
-      navLinks.classList.remove('active');
-      toggleBtn.setAttribute('aria-expanded', 'false');
-    };
+    link.onclick = closeMenu;
   });
 
-  // Fecha o menu ao clicar fora dele
-  document.addEventListener('click', (e) => {
-    if (navLinks.classList.contains('active') && !navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
-      toggleBtn.classList.remove('active');
-      navLinks.classList.remove('active');
-      toggleBtn.setAttribute('aria-expanded', 'false');
-    }
-  });
+  // Registra listeners globais uma única vez.
+  if (!document.body.dataset.mobileMenuGlobalBound) {
+    document.body.dataset.mobileMenuGlobalBound = 'true';
+
+    document.addEventListener('click', (e) => {
+      const currentToggle = document.getElementById('mobile-toggle');
+      const currentNav = document.getElementById('nav-links');
+      if (!currentToggle || !currentNav || !currentNav.classList.contains('active')) return;
+      if (!currentNav.contains(e.target) && !currentToggle.contains(e.target)) {
+        currentToggle.classList.remove('active');
+        currentNav.classList.remove('active');
+        currentToggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('mobile-nav-open');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      const currentToggle = document.getElementById('mobile-toggle');
+      const currentNav = document.getElementById('nav-links');
+      if (!currentToggle || !currentNav) return;
+      currentToggle.classList.remove('active');
+      currentNav.classList.remove('active');
+      currentToggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('mobile-nav-open');
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        const currentToggle = document.getElementById('mobile-toggle');
+        const currentNav = document.getElementById('nav-links');
+        currentToggle?.classList.remove('active');
+        currentNav?.classList.remove('active');
+        currentToggle?.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('mobile-nav-open');
+      }
+    });
+  }
 }
 
 /**
