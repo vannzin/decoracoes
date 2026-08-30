@@ -405,7 +405,7 @@ function filterPortfolio(category) {
 
     const imagesList = Array.isArray(item.images) && item.images.length > 0 ? item.images : [item.imageUrl];
     const photosPillHtml = imagesList.length > 1 
-      ? `<span class="portfolio-photos-pill">📸 ${imagesList.length} fotos</span>` 
+      ? `<span class="portfolio-photos-pill"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: -1.5px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>${imagesList.length} fotos</span>` 
       : '';
 
     card.innerHTML = `
@@ -415,7 +415,13 @@ function filterPortfolio(category) {
         <div class="portfolio-overlay">
           <span class="portfolio-tag">${window.SecurityUtils.escapeHtml(item.categoryName || item.category)}</span>
           <h3 class="portfolio-title">${window.SecurityUtils.escapeHtml(item.title)}</h3>
-          <span class="portfolio-meta">🔍 Clique para ver ${imagesList.length > 1 ? `as ${imagesList.length} fotos` : 'a foto'}</span>
+          <span class="portfolio-meta">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px; vertical-align: -2px;">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            Clique para ver ${imagesList.length > 1 ? `as ${imagesList.length} fotos` : 'a foto'}
+          </span>
         </div>
       </div>
     `;
