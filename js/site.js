@@ -112,6 +112,12 @@ function renderHero(data) {
   if (heroSubtitle && hero.subtitle) {
     heroSubtitle.textContent = hero.subtitle;
   }
+
+  const heroBtnSecondary = document.getElementById('hero-btn-secondary');
+  if (heroBtnSecondary) {
+    const btnText = (hero.secondaryButtonText || 'Ver Nosso Portfólio').replace(/[✨🎨🌸📸]/g, '').trim();
+    heroBtnSecondary.innerHTML = `<span>${window.SecurityUtils.escapeHtml(btnText)}</span>`;
+  }
 }
 
 /**
