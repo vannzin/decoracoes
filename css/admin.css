@@ -754,8 +754,21 @@ textarea.form-control {
 
 /* --- RESPONSIVIDADE ADMIN --- */
 @media (max-width: 900px) {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
   .admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 2000;
     transform: translateX(-100%);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.25);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .admin-sidebar.mobile-open {
@@ -771,6 +784,7 @@ textarea.form-control {
   .admin-topbar {
     padding: 0 16px;
     gap: 12px;
+    height: 64px;
   }
 
   .topbar-page-title {
@@ -791,26 +805,83 @@ textarea.form-control {
   }
 
   .admin-card {
-    padding: 20px 16px;
+    padding: 18px 14px;
+    border-radius: 14px;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .items-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Modais no Mobile */
+  .admin-modal-dialog {
+    max-width: 94vw;
+    margin: 16px auto;
+    max-height: 90vh;
+    border-radius: 16px;
+  }
+
+  .modal-body {
+    padding: 16px 14px;
+    max-height: calc(90vh - 120px);
+    overflow-y: auto;
+  }
+
+  .modal-footer {
+    padding: 12px 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .modal-footer .admin-btn {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+  }
+
+  /* Prevenção de Zoom no iOS */
+  .form-control,
+  .form-select,
+  input[type="text"],
+  input[type="number"],
+  input[type="password"],
+  textarea {
+    font-size: 16px !important;
   }
 
   .toast-container {
     left: 12px;
     right: 12px;
+    bottom: 16px;
   }
 
   .toast-message {
     width: 100%;
     min-width: 0;
     max-width: none;
+    font-size: 0.85rem;
   }
 
   .mobile-sidebar-toggle {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
   }
 
   .admin-content {
-    padding: 20px 16px;
+    padding: 16px 12px;
   }
 }
 
