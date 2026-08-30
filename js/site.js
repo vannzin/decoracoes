@@ -122,12 +122,12 @@ function renderCategories(data) {
   if (!container) return;
 
   const defaultCats = [
-    { id: 'aniversario-infantil', name: 'Aniversário Infantil', icon: 'aniversario-infantil' },
-    { id: 'aniversario-adulto', name: 'Aniversário Adulto', icon: 'aniversario-adulto' },
-    { id: 'casamentos', name: 'Casamentos', icon: 'casamentos' },
-    { id: 'cha-revelacao', name: 'Chá Revelação', icon: 'cha-revelacao' },
-    { id: 'batizados', name: 'Batizados', icon: 'batizados' },
-    { id: 'formatura', name: 'Formatura', icon: 'formatura' }
+    { id: 'aniversario-infantil', name: 'Aniversário Infantil', icon: '🧸' },
+    { id: 'aniversario-adulto', name: 'Aniversário Adulto', icon: '🥂' },
+    { id: 'casamentos', name: 'Casamentos', icon: '💍' },
+    { id: 'cha-revelacao', name: 'Chá Revelação', icon: '🍼' },
+    { id: 'batizados', name: 'Batizados', icon: '🕊️' },
+    { id: 'formatura', name: 'Formatura', icon: '🎓' }
   ];
 
   const categories = (data && Array.isArray(data.categories) && data.categories.length > 0)
@@ -144,13 +144,9 @@ function renderCategories(data) {
     item.setAttribute('tabindex', '0');
     item.setAttribute('aria-label', `Filtrar por categoria ${cat.name}`);
 
-    const iconSvg = (typeof window.getSvgIcon === 'function') 
-      ? window.getSvgIcon(cat.icon || cat.id, cat.icon) 
-      : (cat.icon || '✨');
-
     item.innerHTML = `
       <div class="story-ring">
-        <div class="story-inner">${iconSvg}</div>
+        <div class="story-inner">${cat.icon || '✨'}</div>
       </div>
       <span class="story-label">${window.SecurityUtils.escapeHtml(cat.name)}</span>
     `;
@@ -193,12 +189,12 @@ function renderCategories(data) {
       const li = document.createElement('li');
       const a = document.createElement('a');
       a.href = '#portfolio';
-      a.textContent = cat.name;
+      a.textContent = `${cat.name}`;
       a.onclick = (e) => {
         e.preventDefault();
-        filterPortfolio(cat.id);
-        const sec = document.getElementById('portfolio');
-        if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+        const btn = document.querySelector(`#portfolio-filter-buttons .filter-btn[data-filter="${cat.id}"]`);
+        if (btn) btn.click();
+        document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' });
       };
       li.appendChild(a);
       footerLinksContainer.appendChild(li);
@@ -219,20 +215,27 @@ function renderServices(data) {
 
   container.innerHTML = '';
 
+  const getServiceIcon = (iconName) => {
+    switch (iconName) {
+      case 'sparkles': return '✨';
+      case 'box': return '🎁';
+      case 'palette': return '🎨';
+      case 'cake': return '🎂';
+      default: return '🌸';
+    }
+  };
+
   data.services.forEach(srv => {
     const card = document.createElement('div');
     card.className = 'service-card';
 
-    const iconSvg = (typeof window.getSvgIcon === 'function')
-      ? window.getSvgIcon(srv.icon || 'gift', '🎁')
-      : '🎁';
-
+    const iconEmoji = getServiceIcon(srv.icon);
     const badgeHtml = srv.badge ? `<span class="service-badge">${window.SecurityUtils.escapeHtml(srv.badge)}</span>` : '';
 
     card.innerHTML = `
       <div>
         <div class="service-header">
-          <div class="service-icon-box">${iconSvg}</div>
+          <div class="service-icon-box">${iconEmoji}</div>
           ${badgeHtml}
         </div>
         <h3 class="service-title">${window.SecurityUtils.escapeHtml(srv.title)}</h3>
@@ -278,8 +281,7 @@ function renderPortfolio(data) {
     const allBtn = document.createElement('button');
     allBtn.className = 'filter-btn active';
     allBtn.dataset.filter = 'all';
-    const sparklesIcon = (typeof window.getSvgIcon === 'function') ? window.getSvgIcon('sparkles') : '';
-    allBtn.innerHTML = `<span>${sparklesIcon} Todos os Trabalhos</span>`;
+    allBtn.innerHTML = `<span>✨ Todos os Trabalhos</span>`;
     filterButtonsContainer.appendChild(allBtn);
 
     // Botões para cada categoria oficial
@@ -287,8 +289,7 @@ function renderPortfolio(data) {
       const btn = document.createElement('button');
       btn.className = 'filter-btn';
       btn.dataset.filter = cat.id;
-      const catIcon = (typeof window.getSvgIcon === 'function') ? window.getSvgIcon(cat.icon || cat.id) : '';
-      btn.innerHTML = `<span>${catIcon} ${window.SecurityUtils.escapeHtml(cat.name)}</span>`;
+      btn.innerHTML = `<span>${cat.icon || '🏷️'} ${window.SecurityUtils.escapeHtml(cat.name)}</span>`;
       filterButtonsContainer.appendChild(btn);
     });
 
@@ -342,11 +343,8 @@ function filterPortfolio(category) {
     card.setAttribute('aria-label', `Ver detalhes de ${item.title}`);
 
     const imagesList = Array.isArray(item.images) && item.images.length > 0 ? item.images : [item.imageUrl];
-    const cameraIcon = (typeof window.getSvgIcon === 'function') ? window.getSvgIcon('camera') : '📸';
-    const searchIcon = (typeof window.getSvgIcon === 'function') ? window.getSvgIcon('search') : '🔍';
-
     const photosPillHtml = imagesList.length > 1 
-      ? `<span class="portfolio-photos-pill">${cameraIcon} ${imagesList.length} fotos</span>` 
+      ? `<span class="portfolio-photos-pill">📸 ${imagesList.length} fotos</span>` 
       : '';
 
     card.innerHTML = `
@@ -356,7 +354,7 @@ function filterPortfolio(category) {
         <div class="portfolio-overlay">
           <span class="portfolio-tag">${window.SecurityUtils.escapeHtml(item.categoryName || item.category)}</span>
           <h3 class="portfolio-title">${window.SecurityUtils.escapeHtml(item.title)}</h3>
-          <span class="portfolio-meta">${searchIcon} Ver ${imagesList.length > 1 ? `as ${imagesList.length} fotos` : 'a foto'}</span>
+          <span class="portfolio-meta">🔍 Clique para ver ${imagesList.length > 1 ? `as ${imagesList.length} fotos` : 'a foto'}</span>
         </div>
       </div>
     `;
@@ -644,7 +642,7 @@ function closeLightbox() {
 }
 
 /**
- * 8. Animações de Rolagem Suave (Scroll Reveal)
+ * 8. Animações de Rolagem Suave Bidirecionais (Scroll Reveal ao Descer e Subir)
  */
 function setupScrollAnimations() {
   // Efeito dinâmico no cabeçalho ao rolar
@@ -660,59 +658,79 @@ function setupScrollAnimations() {
   window.addEventListener('scroll', updateHeader, { passive: true });
   updateHeader();
 
-  // Seleciona todos os elementos visuais para animar
-  const elements = document.querySelectorAll(`
-    .section-header,
-    .service-card,
-    .portfolio-card,
-    .about-visual,
-    .about-content,
-    .cta-box,
-    .story-item,
-    .footer-col,
-    .footer-brand
-  `);
+  const queryAnimatedElements = () => {
+    return document.querySelectorAll(`
+      .section-header,
+      .service-card,
+      .portfolio-card,
+      .about-visual,
+      .about-content,
+      .about-quote,
+      .cta-box,
+      .story-item,
+      .hero-visual,
+      .hero-features,
+      .footer-col,
+      .footer-brand
+    `);
+  };
 
-  elements.forEach((el, index) => {
-    if (!el.classList.contains('reveal-on-scroll') && 
-        !el.classList.contains('reveal-left') && 
-        !el.classList.contains('reveal-right') && 
-        !el.classList.contains('reveal-zoom')) {
-      
-      if (el.classList.contains('about-visual')) {
-        el.classList.add('reveal-left');
-      } else if (el.classList.contains('about-content')) {
-        el.classList.add('reveal-right');
-      } else if (el.classList.contains('cta-box')) {
-        el.classList.add('reveal-zoom');
-      } else {
-        el.classList.add('reveal-on-scroll');
+  const applyInitialAnimationClasses = () => {
+    const elements = queryAnimatedElements();
+    elements.forEach((el, index) => {
+      if (!el.classList.contains('reveal-on-scroll') && 
+          !el.classList.contains('reveal-left') && 
+          !el.classList.contains('reveal-right') && 
+          !el.classList.contains('reveal-zoom')) {
+        
+        if (el.classList.contains('about-visual')) {
+          el.classList.add('reveal-left');
+        } else if (el.classList.contains('about-content')) {
+          el.classList.add('reveal-right');
+        } else if (el.classList.contains('cta-box')) {
+          el.classList.add('reveal-zoom');
+        } else {
+          el.classList.add('reveal-on-scroll');
+        }
       }
-    }
 
-    // Delay escalonado para cartões adjacentes
-    if (el.classList.contains('service-card') || el.classList.contains('portfolio-card') || el.classList.contains('story-item')) {
-      const delay = (index % 3) * 0.12;
-      el.style.transitionDelay = `${delay}s`;
-    }
-  });
-
-  // Função para verificar elementos visíveis na janela
-  const checkVisibility = () => {
-    const triggerBottom = window.innerHeight * 0.92;
-    elements.forEach(el => {
-      const boxTop = el.getBoundingClientRect().top;
-      if (boxTop < triggerBottom) {
-        el.classList.add('reveal-visible');
+      // Delay escalonado para cartões adjacentes
+      if (el.classList.contains('service-card') || el.classList.contains('portfolio-card') || el.classList.contains('story-item')) {
+        const delay = (index % 3) * 0.1;
+        el.style.transitionDelay = `${delay}s`;
       }
     });
   };
 
-  window.addEventListener('scroll', checkVisibility, { passive: true });
-  window.addEventListener('resize', checkVisibility, { passive: true });
+  applyInitialAnimationClasses();
+
+  // Verificação Bidirecional de Visibilidade (Anima tanto ao descer quanto ao subir)
+  const checkVisibilityBidirectional = () => {
+    const elements = queryAnimatedElements();
+    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+    const triggerEnter = windowHeight * 0.90; // Entra na tela
+    const triggerExitTop = -120; // Saiu por cima
+    const triggerExitBottom = windowHeight + 100; // Saiu por baixo
+
+    elements.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      
+      // Se o elemento está dentro da área de visualização
+      if (rect.top <= triggerEnter && rect.bottom >= 40) {
+        el.classList.add('reveal-visible');
+      } else if (rect.top > triggerExitBottom || rect.bottom < triggerExitTop) {
+        // Quando sai completamente da área visível (para cima ou para baixo), reseta para animar de novo ao rolar!
+        el.classList.remove('reveal-visible');
+      }
+    });
+  };
+
+  window.addEventListener('scroll', checkVisibilityBidirectional, { passive: true });
+  window.addEventListener('resize', checkVisibilityBidirectional, { passive: true });
 
   // Executa imediatamente e após renderizações
-  setTimeout(checkVisibility, 50);
-  setTimeout(checkVisibility, 250);
+  setTimeout(checkVisibilityBidirectional, 50);
+  setTimeout(checkVisibilityBidirectional, 250);
+  setTimeout(checkVisibilityBidirectional, 600);
 }
 window.setupScrollAnimations = setupScrollAnimations;
