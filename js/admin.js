@@ -13,6 +13,9 @@ const AUTH_CONFIG = {
 
 // Retorna as credenciais ativas salvas ou as padrões
 function getAdminAuth() {
+  if (window.DataManager && typeof window.DataManager.getAuth === 'function') {
+    return window.DataManager.getAuth();
+  }
   try {
     const saved = localStorage.getItem(AUTH_CONFIG.credentialsKey);
     if (saved) {
@@ -31,23 +34,31 @@ function getAdminAuth() {
   };
 }
 
-// Salva novas credenciais
+// Salva novas credenciais em todas as camadas permanentes
 function saveAdminAuth(user, pass) {
-  const isDefault = (user === AUTH_CONFIG.defaultUser && pass === AUTH_CONFIG.defaultPass);
-  const data = {
-    user: user.trim(),
-    pass: pass.trim(),
-    isDefault,
-    updatedAt: new Date().toISOString()
-  };
-  localStorage.setItem(AUTH_CONFIG.credentialsKey, JSON.stringify(data));
+  if (window.DataManager && typeof window.DataManager.saveAuth === 'function') {
+    window.DataManager.saveAuth(user, pass);
+  } else {
+    const isDefault = (user === AUTH_CONFIG.defaultUser && pass === AUTH_CONFIG.defaultPass);
+    const data = {
+      user: user.trim(),
+      pass: pass.trim(),
+      isDefault,
+      updatedAt: new Date().toISOString()
+    };
+    localStorage.setItem(AUTH_CONFIG.credentialsKey, JSON.stringify(data));
+  }
   updateAuthStatusBadge();
   return true;
 }
 
 // Restaura credenciais padrão
 function resetAdminAuthToDefault() {
-  localStorage.removeItem(AUTH_CONFIG.credentialsKey);
+  if (window.DataManager && typeof window.DataManager.resetAuth === 'function') {
+    window.DataManager.resetAuth();
+  } else {
+    localStorage.removeItem(AUTH_CONFIG.credentialsKey);
+  }
   updateAuthStatusBadge();
   return { user: AUTH_CONFIG.defaultUser, pass: AUTH_CONFIG.defaultPass, isDefault: true };
 }

@@ -159,6 +159,12 @@ const DEFAULT_DATA = {
       { number: '5+', label: 'Anos de História' }
     ]
   },
+  auth: {
+    user: 'admin',
+    pass: 'mary123',
+    isDefault: true,
+    updatedAt: new Date().toISOString()
+  },
   lastUpdated: new Date().toISOString()
 };
 
@@ -372,6 +378,7 @@ const DataManager = {
         company: { ...DEFAULT_DATA.company, ...(parsed.company || {}) },
         hero: { ...DEFAULT_DATA.hero, ...(parsed.hero || {}) },
         about: { ...DEFAULT_DATA.about, ...(parsed.about || {}) },
+        auth: parsed.auth ? { ...DEFAULT_DATA.auth, ...parsed.auth } : DEFAULT_DATA.auth,
         services: Array.isArray(parsed.services) ? parsed.services : DEFAULT_DATA.services,
         portfolio: Array.isArray(parsed.portfolio) ? parsed.portfolio : DEFAULT_DATA.portfolio,
         categories: Array.isArray(parsed.categories) ? parsed.categories : DEFAULT_DATA.categories
@@ -380,6 +387,72 @@ const DataManager = {
       console.error('Erro ao ler LocalStorage, restaurando padrões:', e);
       return JSON.parse(JSON.stringify(DEFAULT_DATA));
     }
+  },
+
+  // Obtém as credenciais de autenticação ativas (com fallback em múltiplas camadas)
+  getAuth() {
+    try {
+      const data = this.load();
+      if (data && data.auth && data.auth.user && data.auth.pass) {
+        return data.auth;
+      }
+    } catch (e) {}
+
+    try {
+      const stored = localStorage.getItem('decoracoes_mary_auth_credentials');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && parsed.user && parsed.pass) {
+          return parsed;
+        }
+      }
+    } catch (e) {}
+
+    return {
+      user: 'admin',
+      pass: 'mary123',
+      isDefault: true
+    };
+  },
+
+  // Salva permanentemente as novas credenciais de acesso em todas as camadas
+  saveAuth(user, pass) {
+    const cleanUser = String(user || 'admin').trim();
+    const cleanPass = String(pass || 'mary123').trim();
+    const isDefault = (cleanUser === 'admin' && cleanPass === 'mary123');
+
+    const authObj = {
+      user: cleanUser,
+      pass: cleanPass,
+      isDefault,
+      updatedAt: new Date().toISOString()
+    };
+
+    // 1. Salva no banco de dados principal do site
+    try {
+      const currentData = this.load();
+      currentData.auth = authObj;
+      this.save(currentData, false);
+    } catch (e) {
+      console.warn('Erro ao salvar auth no data principal:', e);
+    }
+
+    // 2. Salva em chave direta de LocalStorage
+    try {
+      localStorage.setItem('decoracoes_mary_auth_credentials', JSON.stringify(authObj));
+    } catch (e) {}
+
+    // 3. Salva no IndexedDB de forma dedicada
+    try {
+      IndexedDBStorage.set('auth_data', authObj);
+    } catch (e) {}
+
+    return authObj;
+  },
+
+  // Restaura as credenciais para o padrão de fábrica
+  resetAuth() {
+    return this.saveAuth('admin', 'mary123');
   },
 
   // Salva os dados no Armazenamento Híbrido (IndexedDB + LocalStorage) e notifica a aplicação
@@ -411,9 +484,13 @@ const DataManager = {
     }
   },
 
-  // Restaura dados de fábrica
-  resetToDefault() {
+  // Restaura dados de fábrica mantendo as credenciais de acesso
+  resetToDefault(preserveAuth = true) {
+    const activeAuth = preserveAuth ? this.getAuth() : DEFAULT_DATA.auth;
     const data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    if (preserveAuth && activeAuth) {
+      data.auth = activeAuth;
+    }
     this.save(data, true);
     return data;
   },
