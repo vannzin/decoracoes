@@ -733,11 +733,13 @@ function renderAdminCategories(categories) {
     const card = document.createElement('div');
     card.className = 'item-admin-card';
 
+    const catIconSvg = (typeof window.getSvgIcon === 'function') ? window.getSvgIcon(cat.icon || cat.id) : (cat.icon || '🏷️');
+
     card.innerHTML = `
       <div class="item-admin-body" style="text-align: center; padding: 20px;">
         <div style="width: 76px; height: 76px; border-radius: 50%; padding: 3.5px; background: var(--rose-gold-gradient); margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
-          <div style="width: 100%; height: 100%; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
-            ${cat.icon || '🏷️'}
+          <div style="width: 100%; height: 100%; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; color: var(--admin-primary);">
+            ${catIconSvg}
           </div>
         </div>
         <h4 class="item-admin-title" style="margin-bottom: 4px;">${window.SecurityUtils.escapeHtml(cat.name)}</h4>
@@ -745,8 +747,14 @@ function renderAdminCategories(categories) {
           Código: ${window.SecurityUtils.escapeHtml(cat.id)}
         </span>
         <div class="item-admin-actions" style="justify-content: center; margin-top: 10px;">
-          <button class="admin-btn admin-btn-sm admin-btn-secondary btn-edit-cat">✏️ Editar</button>
-          <button class="admin-btn admin-btn-sm admin-btn-danger btn-del-cat">🗑️ Excluir</button>
+          <button class="admin-btn admin-btn-sm admin-btn-secondary btn-edit-cat">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+            <span>Editar</span>
+          </button>
+          <button class="admin-btn admin-btn-sm admin-btn-danger btn-del-cat">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+            <span>Excluir</span>
+          </button>
         </div>
       </div>
     `;
@@ -756,7 +764,7 @@ function renderAdminCategories(categories) {
       document.getElementById('modal-category-title').textContent = 'Editar Categoria';
       document.getElementById('category-edit-id').value = cat.id;
       document.getElementById('category-name').value = cat.name;
-      document.getElementById('category-icon').value = cat.icon || '🎈';
+      document.getElementById('category-icon').value = cat.icon || 'sparkles';
       document.getElementById('category-slug').value = cat.id;
       openAdminModal('modal-category');
     };
@@ -791,7 +799,8 @@ function updateCategoryOptionsInPortfolioModal(categories) {
       btn.type = 'button';
       btn.className = 'admin-btn admin-btn-sm cat-pill-btn';
       btn.dataset.cat = cat.id;
-      btn.innerHTML = `<span>${cat.icon || '🏷️'} ${window.SecurityUtils.escapeHtml(cat.name)}</span>`;
+      const catSvg = (typeof window.getSvgIcon === 'function') ? window.getSvgIcon(cat.icon || cat.id) : '';
+      btn.innerHTML = `<span>${catSvg} ${window.SecurityUtils.escapeHtml(cat.name)}</span>`;
       btn.onclick = () => {
         updateActiveCategoryPill(cat.id);
       };
@@ -831,8 +840,14 @@ function renderAdminServices(services) {
         <h4 class="item-admin-title">${window.SecurityUtils.escapeHtml(srv.title)}</h4>
         <p class="item-admin-desc">${window.SecurityUtils.escapeHtml(srv.description)}</p>
         <div class="item-admin-actions">
-          <button class="admin-btn admin-btn-sm admin-btn-secondary btn-edit-srv">✏️ Editar</button>
-          <button class="admin-btn admin-btn-sm admin-btn-danger btn-del-srv">🗑️ Excluir</button>
+          <button class="admin-btn admin-btn-sm admin-btn-secondary btn-edit-srv">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+            <span>Editar</span>
+          </button>
+          <button class="admin-btn admin-btn-sm admin-btn-danger btn-del-srv">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+            <span>Excluir</span>
+          </button>
         </div>
       </div>
     `;
@@ -882,12 +897,12 @@ function renderAdminPortfolio(portfolio) {
     card.className = 'item-admin-card';
 
     const imagesList = Array.isArray(item.images) && item.images.length > 0 ? item.images : [item.imageUrl];
-    const photosCountBadge = `<span style="font-size: 0.72rem; font-weight: 600; color: var(--admin-primary); margin-left: 6px;">📸 ${imagesList.length} foto(s)</span>`;
+    const cameraSvg = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 3px;"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>`;
 
     card.innerHTML = `
       <div style="position: relative;">
         <img src="${window.SecurityUtils.escapeHtml(item.imageUrl)}" alt="${window.SecurityUtils.escapeHtml(item.title)}" class="item-admin-img" loading="lazy">
-        <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.65); color: #FFF; font-size: 0.72rem; padding: 2px 8px; border-radius: 12px;">📸 ${imagesList.length} fotos</span>
+        <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.65); color: #FFF; font-size: 0.72rem; padding: 2px 8px; border-radius: 12px; display: flex; align-items: center;">${cameraSvg} ${imagesList.length} fotos</span>
       </div>
       <div class="item-admin-body">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -896,8 +911,14 @@ function renderAdminPortfolio(portfolio) {
         <h4 class="item-admin-title">${window.SecurityUtils.escapeHtml(item.title)}</h4>
         <p class="item-admin-desc">${window.SecurityUtils.escapeHtml(item.description || 'Sem descrição')}</p>
         <div class="item-admin-actions">
-          <button class="admin-btn admin-btn-sm admin-btn-secondary btn-edit-port">✏️ Editar</button>
-          <button class="admin-btn admin-btn-sm admin-btn-danger btn-del-port">🗑️ Excluir</button>
+          <button class="admin-btn admin-btn-sm admin-btn-secondary btn-edit-port">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+            <span>Editar</span>
+          </button>
+          <button class="admin-btn admin-btn-sm admin-btn-danger btn-del-port">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+            <span>Excluir</span>
+          </button>
         </div>
       </div>
     `;
